@@ -1,0 +1,43 @@
+name: Teams Morning Bot
+
+on:
+  schedule:
+    # Taiwan time Mon-Fri 08:00 (UTC+8 → UTC 00:00)
+    - cron: "0 0 * * 1-5"
+  workflow_dispatch: # 允許手動觸發測試
+
+jobs:
+  send-morning-message:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Send morning message to Teams
+        env:
+          TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
+          # 訊息模式：mixed（預設，A+B 混合）、static（僅 A）、ai（僅 B）
+          MESSAGE_MODE: ${{ vars.MESSAGE_MODE || 'mixed' }}
+          MESSAGE_STRATEGY: ${{ vars.MESSAGE_STRATEGY || 'random' }}
+          AI_SCHEDULE_STRATEGY: ${{ vars.AI_SCHEDULE_STRATEGY || 'biweekly' }}
+          AI_WORKDAY_INTERVAL: ${{ vars.AI_WORKDAY_INTERVAL || '10' }}
+          # 方案 B — AI 設定（混合模式下約兩週使用一次）
+          AI_PROVIDER: ${{ vars.AI_PROVIDER || 'openai' }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'gpt-4o-mini' }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: ${{ vars.GEMINI_MODEL || 'gemini-2.0-flash' }}
+          # 主題配圖（選填，未設定時使用 Wikimedia 免費搜尋）
+          UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+          ENABLE_IMAGES: ${{ vars.ENABLE_IMAGES || 'true' }}
+          MANAGEMENT_QUOTE_WEEKDAY: ${{ vars.MANAGEMENT_QUOTE_WEEKDAY || '2' }}
+        run: python main.py
