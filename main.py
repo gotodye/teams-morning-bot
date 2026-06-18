@@ -18,6 +18,7 @@ from dotenv import load_dotenv
 
 from messages import MANAGEMENT_QUOTES, MESSAGES, PHILOSOPHY_QUOTES
 from image_search import find_theme_image
+from news import find_major_news
 
 load_dotenv()
 
@@ -502,6 +503,11 @@ def run_for_date(today: date) -> int:
         return 0
 
     message, source = build_message(today)
+    news_appendix = find_major_news(today)
+    if news_appendix:
+        message += news_appendix
+        logger.info("Major news appended")
+
     image_url = find_theme_image(today, message, source)
     if image_url:
         logger.info("Theme image found")

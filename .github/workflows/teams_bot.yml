@@ -39,5 +39,8 @@ jobs:
           UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
           ENABLE_IMAGES: ${{ vars.ENABLE_IMAGES || 'true' }}
+          ENABLE_MAJOR_NEWS: ${{ vars.ENABLE_MAJOR_NEWS || 'true' }}
+          MAJOR_NEWS_THRESHOLD: ${{ vars.MAJOR_NEWS_THRESHOLD || '70' }}
+          TEAMS_WEBHOOK_FORMAT: ${{ vars.TEAMS_WEBHOOK_FORMAT || 'auto' }}
           MANAGEMENT_QUOTE_WEEKDAY: ${{ vars.MANAGEMENT_QUOTE_WEEKDAY || '2' }}
         run: python main.py
