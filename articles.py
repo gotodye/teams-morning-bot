@@ -1,0 +1,223 @@
+"""Curated famous articles on work performance and positive life mindset."""
+
+from __future__ import annotations
+
+from datetime import date
+from typing import TypedDict
+
+
+class Article(TypedDict):
+    title: str
+    source: str
+    url: str
+    topic: str
+    fallback_summary: str
+
+
+ARTICLES: list[Article] = [
+    {
+        "title": "Manage Your Energy, Not Your Time",
+        "source": "Harvard Business Review",
+        "url": "https://hbr.org/2007/10/manage-your-energy-not-your-time",
+        "topic": "sustainable high performance at work",
+        "fallback_summary": (
+            "Schwartz and McCarthy show that time is fixed but personal energy can be "
+            "renewed. Build rituals across physical, emotional, mental, and spiritual "
+            "energy so you perform well without burning out."
+        ),
+    },
+    {
+        "title": "What Makes a Leader?",
+        "source": "Harvard Business Review",
+        "url": "https://hbr.org/1998/11/what-makes-a-leader",
+        "topic": "emotional intelligence in leadership",
+        "fallback_summary": (
+            "Goleman argues that emotional intelligence — self-awareness, self-regulation, "
+            "motivation, empathy, and social skill — separates great leaders from average "
+            "ones more than IQ or technical skill alone."
+        ),
+    },
+    {
+        "title": "How to Build Habits That Actually Stick",
+        "source": "James Clear",
+        "url": "https://jamesclear.com/three-steps-habit-change",
+        "topic": "building better daily habits",
+        "fallback_summary": (
+            "Clear explains that lasting habits need a clear cue, a craving, a simple "
+            "response, and a satisfying reward. Start tiny, repeat consistently, and "
+            "let identity — not willpower — drive change."
+        ),
+    },
+    {
+        "title": "The Power of Vulnerability",
+        "source": "Brené Brown / TED",
+        "url": "https://www.ted.com/talks/brene_brown_the_power_of_vulnerability",
+        "topic": "courage and authentic connection at work",
+        "fallback_summary": (
+            "Brown's research shows vulnerability is not weakness — it is the birthplace "
+            "of innovation, trust, and belonging. Teams grow stronger when people can "
+            "admit uncertainty and ask for help."
+        ),
+    },
+    {
+        "title": "Deep Work: Rules for Focused Success",
+        "source": "Cal Newport",
+        "url": "https://www.calnewport.com/books/deep-work/",
+        "topic": "focused work in a distracted world",
+        "fallback_summary": (
+            "Newport defines deep work as distraction-free concentration that creates "
+            "real value. Protect blocks of focus, reduce shallow busywork, and train "
+            "attention like a skill — it compounds over a career."
+        ),
+    },
+    {
+        "title": "Man's Search for Meaning",
+        "source": "Viktor E. Frankl",
+        "url": "https://www.penguinrandomhouse.com/books/132832/mans-search-for-meaning-by-viktor-e-frankl/",
+        "topic": "finding purpose under adversity",
+        "fallback_summary": (
+            "Frankl teaches that we cannot always control circumstances, but we can "
+            "choose our response. A sense of meaning — in work, love, or courage — "
+            "helps people endure difficulty and live with dignity."
+        ),
+    },
+    {
+        "title": "Start With Why",
+        "source": "Simon Sinek",
+        "url": "https://simonsinek.com/books/start-with-why/",
+        "topic": "purpose-driven leadership",
+        "fallback_summary": (
+            "Sinek shows that inspiring leaders communicate why they exist before what "
+            "they do. Purpose builds trust and loyalty — people follow causes they "
+            "believe in, not just products or instructions."
+        ),
+    },
+    {
+        "title": "The Making of an Expert",
+        "source": "Harvard Business Review",
+        "url": "https://hbr.org/2007/07/the-making-of-an-expert",
+        "topic": "deliberate practice and mastery",
+        "fallback_summary": (
+            "Ericsson's research finds that elite performance comes from deliberate "
+            "practice: focused repetition, immediate feedback, and stretching beyond "
+            "comfort zones — not talent alone or years of routine work."
+        ),
+    },
+    {
+        "title": "Grit: The Power of Passion and Perseverance",
+        "source": "Angela Duckworth / TED",
+        "url": "https://www.ted.com/talks/angela_lee_duckworth_grit_the_power_of_passion_and_perseverance",
+        "topic": "long-term perseverance over talent",
+        "fallback_summary": (
+            "Duckworth defines grit as passion plus perseverance for long-term goals. "
+            "Sticking with hard things — learning from setbacks and showing up again — "
+            "often predicts success better than raw intelligence."
+        ),
+    },
+    {
+        "title": "How to Stop Worrying and Start Living",
+        "source": "Dale Carnegie",
+        "url": "https://www.dalecarnegie.com/en/books/how-to-stop-worrying-and-start-living",
+        "topic": "reducing anxiety and staying constructive",
+        "fallback_summary": (
+            "Carnegie offers practical tools to break the worry habit: act on facts, "
+            "accept the worst to reduce fear, keep busy with purposeful action, and "
+            "focus on what you can influence today."
+        ),
+    },
+    {
+        "title": "The Happiness Advantage",
+        "source": "Shawn Achor",
+        "url": "https://www.shawnachor.com/the-books/",
+        "topic": "positive psychology at work",
+        "fallback_summary": (
+            "Achor flips the formula: happiness fuels success, not the other way around. "
+            "Small positive habits — gratitude, social connection, and optimism — "
+            "improve productivity, creativity, and resilience at work."
+        ),
+    },
+    {
+        "title": "Atomic Habits: An Easy Way to Build Good Habits",
+        "source": "James Clear",
+        "url": "https://jamesclear.com/atomic-habits",
+        "topic": "small changes that compound",
+        "fallback_summary": (
+            "Clear's 1% rule: tiny improvements compound into remarkable results. Design "
+            "your environment, make good habits obvious and easy, and align daily actions "
+            "with the person you want to become."
+        ),
+    },
+    {
+        "title": "The 7 Habits of Highly Effective People",
+        "source": "Stephen R. Covey",
+        "url": "https://www.franklincovey.com/the-7-habits/",
+        "topic": "principles of personal effectiveness",
+        "fallback_summary": (
+            "Covey centers effectiveness on character and principles: be proactive, begin "
+            "with the end in mind, put first things first, think win-win, and sharpen the "
+            "saw through continuous renewal."
+        ),
+    },
+    {
+        "title": "Mindset: The New Psychology of Success",
+        "source": "Carol S. Dweck",
+        "url": "https://fs.blog/carol-dweck-mindset/",
+        "topic": "growth mindset vs fixed mindset",
+        "fallback_summary": (
+            "Dweck shows that believing abilities can grow — a growth mindset — leads "
+            "people to embrace challenges and learn from criticism. A fixed mindset "
+            "avoids risk and stalls development."
+        ),
+    },
+    {
+        "title": "The Obstacle Is the Way",
+        "source": "Ryan Holiday",
+        "url": "https://www.thepaintedporch.com/products/the-obstacle-is-the-way",
+        "topic": "stoic resilience in modern life",
+        "fallback_summary": (
+            "Holiday revives Stoic wisdom: obstacles are opportunities to practice "
+            "perception, action, and will. Reframe setbacks, focus on what you control, "
+            "and use adversity as fuel for growth."
+        ),
+    },
+    {
+        "title": "Essentialism: The Disciplined Pursuit of Less",
+        "source": "Greg McKeown",
+        "url": "https://gregmckeown.com/essentialism/",
+        "topic": "doing less but better",
+        "fallback_summary": (
+            "McKeown argues for essentialism: say no to the trivial many so you can "
+            "invest in the vital few. Clarity about what truly matters reduces burnout "
+            "and raises the quality of your contribution."
+        ),
+    },
+    {
+        "title": "Thinking, Fast and Slow",
+        "source": "Daniel Kahneman",
+        "url": "https://us.macmillan.com/books/9780374533557/thinkingfastandslow",
+        "topic": "decision-making and cognitive bias",
+        "fallback_summary": (
+            "Kahneman maps System 1 (fast, intuitive) and System 2 (slow, deliberate) "
+            "thinking. Knowing when intuition misleads us — and when to pause for "
+            "analysis — improves judgment at work and in life."
+        ),
+    },
+    {
+        "title": "Dare to Lead",
+        "source": "Brené Brown",
+        "url": "https://brenebrown.com/hubs/dare-to-lead/",
+        "topic": "brave leadership and trust",
+        "fallback_summary": (
+            "Brown defines daring leadership as rumbling with vulnerability, living into "
+            "values, braving trust, and learning to rise after failure. Courageous "
+            "leaders create cultures where people feel safe to innovate."
+        ),
+    },
+]
+
+
+def pick_article(today: date) -> Article:
+    """Pick one article deterministically per calendar week."""
+    year, week, _ = today.isocalendar()
+    index = (year * 100 + week) % len(ARTICLES)
+    return ARTICLES[index]

@@ -17,6 +17,7 @@ import holidays
 import requests
 from dotenv import load_dotenv
 
+from articles import pick_article
 from messages import MANAGEMENT_QUOTES, MESSAGES, PHILOSOPHY_QUOTES
 from image_search import find_theme_image
 from news import find_major_news
@@ -96,6 +97,53 @@ def count_workdays_since(start: date, end: date) -> int:
     return count
 
 
+def get_week_key(today: date) -> str:
+    """ISO calendar week identifier."""
+    year, week, _ = today.isocalendar()
+    return f"{year}-W{week:02d}"
+
+
+def get_week_workdays(today: date) -> list[date]:
+    """List all workdays in the current ISO calendar week (Mon–Sun)."""
+    year, week, _ = today.isocalendar()
+    monday = date.fromisocalendar(year, week, 1)
+    tw_holidays = get_tw_holidays(monday.year, (monday + timedelta(days=6)).year)
+    return [
+        monday + timedelta(days=offset)
+        for offset in range(7)
+        if is_tw_workday(day := monday + timedelta(days=offset), tw_holidays)
+    ]
+
+
+def _management_days_in_week(today: date) -> set[date]:
+    mgmt_weekday = int(
+        os.environ.get("MANAGEMENT_QUOTE_WEEKDAY", DEFAULT_MANAGEMENT_QUOTE_WEEKDAY)
+    )
+    return {d for d in get_week_workdays(today) if d.weekday() == mgmt_weekday}
+
+
+def get_article_day_in_week(today: date) -> date | None:
+    """Pick one workday per week for article insight summaries."""
+    return _pick_week_slot(today, "article", _management_days_in_week(today))
+
+
+def get_ai_day_in_week(today: date) -> date | None:
+    """Pick one workday per week for AI-generated messages."""
+    excluded = _management_days_in_week(today)
+    article_day = _pick_week_slot(today, "article", excluded)
+    if article_day:
+        excluded.add(article_day)
+    return _pick_week_slot(today, "ai", excluded)
+
+
+def _pick_week_slot(today: date, slot: str, excluded: set[date]) -> date | None:
+    candidates = [d for d in get_week_workdays(today) if d not in excluded]
+    if not candidates:
+        return None
+    seed = hashlib.md5(f"{get_week_key(today)}:{slot}".encode()).hexdigest()
+    return candidates[int(seed, 16) % len(candidates)]
+
+
 def get_biweek_key(today: date) -> str:
     """以 ISO 週為基準，每兩週為一個週期。"""
     year, week, _ = today.isocalendar()
@@ -128,10 +176,11 @@ def get_biweek_special_day(today: date, slot: str) -> date | None:
     index = int(seed, 16) % len(workdays)
 
     if slot == "philosophy" and len(workdays) > 1:
-        ai_seed = hashlib.md5(f"{get_biweek_key(today)}:ai".encode()).hexdigest()
-        ai_index = int(ai_seed, 16) % len(workdays)
-        if index == ai_index:
-            index = (index + 1) % len(workdays)
+        article_day = get_article_day_in_week(today)
+        if article_day in workdays:
+            article_index = workdays.index(article_day)
+            if index == article_index:
+                index = (index + 1) % len(workdays)
 
     return workdays[index]
 
@@ -149,12 +198,12 @@ def get_philosophy_day_in_biweek(today: date) -> date | None:
 def should_use_ai(today: date) -> bool:
     """
     判斷今天是否使用方案 B（AI 生成）。
-    預設採雙週週期隨機選一天；亦可透過環境變數調整或強制指定。
+    預設每週一個工作日；亦可透過環境變數調整或強制指定。
     """
     forced = os.environ.get("FORCE_MESSAGE_TYPE", "").lower()
     if forced == "ai":
         return True
-    if forced in ("static", "management", "philosophy"):
+    if forced in ("static", "management", "philosophy", "article"):
         return False
 
     mode = os.environ.get("MESSAGE_MODE", "mixed").lower()
@@ -163,14 +212,30 @@ def should_use_ai(today: date) -> bool:
     if mode == "ai":
         return True
 
-    strategy = os.environ.get("AI_SCHEDULE_STRATEGY", "biweekly").lower()
+    strategy = os.environ.get("AI_SCHEDULE_STRATEGY", "weekly").lower()
     if strategy == "workday_interval":
         interval = int(os.environ.get("AI_WORKDAY_INTERVAL", DEFAULT_AI_WORKDAY_INTERVAL))
         workday_number = count_workdays_since(date(2024, 1, 1), today)
         return workday_number % interval == 0
 
-    ai_day = get_ai_day_in_biweek(today)
+    if strategy == "biweekly":
+        ai_day = get_ai_day_in_biweek(today)
+        return ai_day == today
+
+    ai_day = get_ai_day_in_week(today)
     return ai_day == today
+
+
+def is_article_insight_day(today: date) -> bool:
+    """Once per week: famous article summary with link."""
+    forced = os.environ.get("FORCE_MESSAGE_TYPE", "").lower()
+    if forced == "article":
+        return True
+    if forced in ("ai", "static", "management", "philosophy"):
+        return False
+
+    article_day = get_article_day_in_week(today)
+    return article_day == today
 
 
 def is_management_quote_day(today: date) -> bool:
@@ -178,7 +243,7 @@ def is_management_quote_day(today: date) -> bool:
     forced = os.environ.get("FORCE_MESSAGE_TYPE", "").lower()
     if forced == "management":
         return True
-    if forced in ("ai", "static", "philosophy"):
+    if forced in ("ai", "static", "philosophy", "article"):
         return False
 
     mgmt_weekday = int(
@@ -192,7 +257,7 @@ def is_philosophy_quote_day(today: date) -> bool:
     forced = os.environ.get("FORCE_MESSAGE_TYPE", "").lower()
     if forced == "philosophy":
         return True
-    if forced in ("ai", "static", "management"):
+    if forced in ("ai", "static", "management", "article"):
         return False
 
     philosophy_day = get_philosophy_day_in_biweek(today)
@@ -342,14 +407,59 @@ def _call_gemini(prompt: str) -> str:
     return _extract_gemini_text(response.json())
 
 
+def _truncate_words(text: str, max_words: int) -> str:
+    words = text.split()
+    if len(words) <= max_words:
+        return text.strip()
+    return " ".join(words[:max_words]).rstrip(".,;:") + "…"
+
+
+def generate_article_insight(today: date) -> str:
+    """Weekly article summary with link (summary capped at 100 words)."""
+    article = pick_article(today)
+    prompt = (
+        f'Write a concise English summary of the article "{article["title"]}" '
+        f'from {article["source"]}. Topic: {article["topic"]}. '
+        "Highlight one practical takeaway for work performance or a positive life "
+        "mindset. Maximum 100 words. Output the summary only — no title, no link, "
+        "no markdown."
+    )
+
+    try:
+        provider = os.environ.get("AI_PROVIDER", "openai").lower()
+        if provider == "gemini":
+            summary = _call_gemini(prompt)
+        else:
+            summary = _call_openai(prompt)
+    except Exception:
+        logger.warning("Article summary AI failed — using fallback", exc_info=True)
+        summary = article["fallback_summary"]
+
+    summary = _truncate_words(summary, 100)
+    return (
+        f'📚 **{article["title"]}**\n'
+        f'_{article["source"]}_\n\n'
+        f"{summary}\n\n"
+        f'📖 Read more: {article["url"]}'
+    )
+
+
 def build_message(today: date) -> tuple[str, str]:
     """
     Build today's message. Returns (message, source).
-    Sources: management | philosophy | ai | static
+    Sources: management | article | philosophy | ai | static
     """
     if is_management_quote_day(today):
         logger.info("Management quote day — famous leader quote")
         return pick_management_quote(today), "management"
+
+    if is_article_insight_day(today):
+        logger.info("Article insight day — famous article summary")
+        try:
+            return generate_article_insight(today), "article"
+        except Exception:
+            logger.warning("Article insight failed — falling back to static", exc_info=True)
+            return pick_static_message(today), "static"
 
     if is_philosophy_quote_day(today):
         logger.info("Philosophy quote day — famous philosopher quote")
@@ -456,6 +566,7 @@ def _build_teams_payload(
         "ai": " ✨ AI Crafted",
         "management": " 💼 Management Moment",
         "philosophy": " 🪶 Philosophy Moment",
+        "article": " 📚 Article Insight",
     }
     badge = badges.get(source, "")
     title = f"☀️ Good Morning! Happy {weekday_name}{badge}"
@@ -490,6 +601,7 @@ def _build_teams_payload(
         "ai": "6264A7",
         "management": "C19A6B",
         "philosophy": "2D6A4F",
+        "article": "E85D04",
     }
     section: dict = {
         "activityTitle": title,
@@ -536,9 +648,9 @@ def _would_use_ai_today(today: date) -> bool:
     forced = os.environ.get("FORCE_MESSAGE_TYPE", "").lower()
     if forced == "ai":
         return True
-    if forced in ("static", "management", "philosophy"):
+    if forced in ("static", "management", "philosophy", "article"):
         return False
-    if is_management_quote_day(today) or is_philosophy_quote_day(today):
+    if is_management_quote_day(today) or is_philosophy_quote_day(today) or is_article_insight_day(today):
         return False
     return should_use_ai(today)
 

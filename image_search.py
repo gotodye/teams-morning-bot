@@ -47,6 +47,14 @@ PHILOSOPHY_KEYWORDS: list[str] = [
     "library books wisdom thoughtful",
 ]
 
+ARTICLE_KEYWORDS: list[str] = [
+    "reading book coffee morning",
+    "library study inspiration",
+    "open book sunlight desk",
+    "learning growth professional",
+    "journal notebook thoughtful",
+]
+
 
 def build_search_query(today: date, message: str, source: str) -> str:
     """Build image search keywords from weekday, message, and source type."""
@@ -57,6 +65,10 @@ def build_search_query(today: date, message: str, source: str) -> str:
     if source == "philosophy":
         digest = int(hashlib.md5(message.encode()).hexdigest(), 16)
         return PHILOSOPHY_KEYWORDS[digest % len(PHILOSOPHY_KEYWORDS)]
+
+    if source == "article":
+        digest = int(hashlib.md5(message.encode()).hexdigest(), 16)
+        return ARTICLE_KEYWORDS[digest % len(ARTICLE_KEYWORDS)]
 
     weekday_pool = WEEKDAY_KEYWORDS.get(today.weekday(), ["morning greeting"])
     digest = int(hashlib.md5(message.encode()).hexdigest(), 16)

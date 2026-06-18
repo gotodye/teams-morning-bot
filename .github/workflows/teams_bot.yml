@@ -14,6 +14,7 @@ on:
         options:
           - ""
           - ai
+          - article
           - static
           - management
           - philosophy
@@ -43,7 +44,7 @@ jobs:
           TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
           MESSAGE_MODE: ${{ vars.MESSAGE_MODE || 'mixed' }}
           MESSAGE_STRATEGY: ${{ vars.MESSAGE_STRATEGY || 'random' }}
-          AI_SCHEDULE_STRATEGY: ${{ vars.AI_SCHEDULE_STRATEGY || 'biweekly' }}
+          AI_SCHEDULE_STRATEGY: ${{ vars.AI_SCHEDULE_STRATEGY || 'weekly' }}
           AI_WORKDAY_INTERVAL: ${{ vars.AI_WORKDAY_INTERVAL || '10' }}
           AI_PROVIDER: ${{ vars.AI_PROVIDER || 'openai' }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
