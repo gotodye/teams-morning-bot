@@ -1,0 +1,37 @@
+name: Teams Morning Bot AI Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-ai-message:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Send AI test message to Teams
+        env:
+          TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
+          MESSAGE_MODE: mixed
+          AI_PROVIDER: ${{ vars.AI_PROVIDER || 'openai' }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'gpt-4o-mini' }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: ${{ vars.GEMINI_MODEL || 'gemini-2.0-flash' }}
+          UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+          ENABLE_IMAGES: ${{ vars.ENABLE_IMAGES || 'true' }}
+          ENABLE_MAJOR_NEWS: "false"
+          TEAMS_WEBHOOK_FORMAT: ${{ vars.TEAMS_WEBHOOK_FORMAT || 'auto' }}
+          FORCE_MESSAGE_TYPE: ai
+          SKIP_WORKDAY_CHECK: "true"
+        run: python main.py
