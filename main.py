@@ -18,6 +18,7 @@ import requests
 from dotenv import load_dotenv
 
 from articles import pick_article
+from interactions import pick_interaction
 from messages import MANAGEMENT_QUOTES, MESSAGES, PHILOSOPHY_QUOTES
 from image_search import find_theme_image
 from news import find_major_news
@@ -166,33 +167,43 @@ def get_biweek_workdays(today: date) -> list[date]:
     ]
 
 
-def get_biweek_special_day(today: date, slot: str) -> date | None:
-    """Pick one workday per biweek for a special slot (ai, philosophy)."""
-    workdays = get_biweek_workdays(today)
+def _pick_biweek_slot(today: date, slot: str, excluded: set[date]) -> date | None:
+    workdays = [d for d in get_biweek_workdays(today) if d not in excluded]
     if not workdays:
         return None
-
     seed = hashlib.md5(f"{get_biweek_key(today)}:{slot}".encode()).hexdigest()
-    index = int(seed, 16) % len(workdays)
+    return workdays[int(seed, 16) % len(workdays)]
 
-    if slot == "philosophy" and len(workdays) > 1:
-        article_day = get_article_day_in_week(today)
-        if article_day in workdays:
-            article_index = workdays.index(article_day)
-            if index == article_index:
-                index = (index + 1) % len(workdays)
 
-    return workdays[index]
+def get_biweek_special_day(today: date, slot: str) -> date | None:
+    """Pick one workday per biweek for a special slot (legacy / ai biweekly strategy)."""
+    return _pick_biweek_slot(today, slot, set())
 
 
 def get_ai_day_in_biweek(today: date) -> date | None:
     """Pick one workday per biweek for AI-generated messages."""
-    return get_biweek_special_day(today, "ai")
+    return _pick_biweek_slot(today, "ai", set())
 
 
 def get_philosophy_day_in_biweek(today: date) -> date | None:
     """Pick one workday per biweek for philosopher quotes."""
-    return get_biweek_special_day(today, "philosophy")
+    excluded: set[date] = set()
+    article_day = get_article_day_in_week(today)
+    if article_day:
+        excluded.add(article_day)
+    return _pick_biweek_slot(today, "philosophy", excluded)
+
+
+def get_interaction_day_in_biweek(today: date) -> date | None:
+    """Pick one workday per biweek for channel interaction prompts."""
+    excluded: set[date] = set()
+    article_day = get_article_day_in_week(today)
+    if article_day:
+        excluded.add(article_day)
+    philosophy_day = _pick_biweek_slot(today, "philosophy", excluded)
+    if philosophy_day:
+        excluded.add(philosophy_day)
+    return _pick_biweek_slot(today, "interaction", excluded)
 
 
 def should_use_ai(today: date) -> bool:
@@ -203,7 +214,7 @@ def should_use_ai(today: date) -> bool:
     forced = os.environ.get("FORCE_MESSAGE_TYPE", "").lower()
     if forced == "ai":
         return True
-    if forced in ("static", "management", "philosophy", "article"):
+    if forced in ("static", "management", "philosophy", "article", "interaction"):
         return False
 
     mode = os.environ.get("MESSAGE_MODE", "mixed").lower()
@@ -231,11 +242,23 @@ def is_article_insight_day(today: date) -> bool:
     forced = os.environ.get("FORCE_MESSAGE_TYPE", "").lower()
     if forced == "article":
         return True
-    if forced in ("ai", "static", "management", "philosophy"):
+    if forced in ("ai", "static", "management", "philosophy", "interaction"):
         return False
 
     article_day = get_article_day_in_week(today)
     return article_day == today
+
+
+def is_interaction_day(today: date) -> bool:
+    """Once per biweek: invite the channel to reply in-thread (occasionally Forms)."""
+    forced = os.environ.get("FORCE_MESSAGE_TYPE", "").lower()
+    if forced == "interaction":
+        return True
+    if forced in ("ai", "static", "management", "philosophy", "article"):
+        return False
+
+    interaction_day = get_interaction_day_in_biweek(today)
+    return interaction_day == today
 
 
 def is_management_quote_day(today: date) -> bool:
@@ -243,7 +266,7 @@ def is_management_quote_day(today: date) -> bool:
     forced = os.environ.get("FORCE_MESSAGE_TYPE", "").lower()
     if forced == "management":
         return True
-    if forced in ("ai", "static", "philosophy", "article"):
+    if forced in ("ai", "static", "philosophy", "article", "interaction"):
         return False
 
     mgmt_weekday = int(
@@ -257,7 +280,7 @@ def is_philosophy_quote_day(today: date) -> bool:
     forced = os.environ.get("FORCE_MESSAGE_TYPE", "").lower()
     if forced == "philosophy":
         return True
-    if forced in ("ai", "static", "management", "article"):
+    if forced in ("ai", "static", "management", "article", "interaction"):
         return False
 
     philosophy_day = get_philosophy_day_in_biweek(today)
@@ -444,10 +467,45 @@ def generate_article_insight(today: date) -> str:
     )
 
 
+def build_interaction_message(today: date) -> str:
+    """Biweekly team interaction — reply in channel; Forms link when configured."""
+    interaction = pick_interaction(today)
+    forms_url = os.environ.get("INTERACTION_FORMS_URL", "").strip()
+
+    use_forms = interaction["kind"] == "forms" and forms_url
+    body = interaction["body"] if use_forms else (
+        interaction["channel_fallback"] or interaction["body"]
+    )
+
+    lines = [
+        f'📣 **{interaction["headline"]}**',
+        "",
+        body,
+        "",
+    ]
+
+    if use_forms:
+        lines.extend([
+            f"📋 **Quick pulse (30 sec):** {forms_url}",
+            "",
+            "_Optional: share a highlight in the thread too — we read every reply!_",
+        ])
+    else:
+        if interaction["kind"] == "forms" and not forms_url:
+            logger.info(
+                "INTERACTION_FORMS_URL not set — using channel-reply fallback"
+            )
+        lines.append(
+            "👇 **Reply in this thread** — read each other's answers when you have a minute!"
+        )
+
+    return "\n".join(lines)
+
+
 def build_message(today: date) -> tuple[str, str]:
     """
     Build today's message. Returns (message, source).
-    Sources: management | article | philosophy | ai | static
+    Sources: management | article | philosophy | interaction | ai | static
     """
     if is_management_quote_day(today):
         logger.info("Management quote day — famous leader quote")
@@ -464,6 +522,10 @@ def build_message(today: date) -> tuple[str, str]:
     if is_philosophy_quote_day(today):
         logger.info("Philosophy quote day — famous philosopher quote")
         return pick_philosophy_quote(today), "philosophy"
+
+    if is_interaction_day(today):
+        logger.info("Interaction day — biweekly channel prompt")
+        return build_interaction_message(today), "interaction"
 
     if should_use_ai(today):
         logger.info("AI-generated creative message")
@@ -567,6 +629,7 @@ def _build_teams_payload(
         "management": " 💼 Management Moment",
         "philosophy": " 🪶 Philosophy Moment",
         "article": " 📚 Article Insight",
+        "interaction": " 📣 Let's Connect",
     }
     badge = badges.get(source, "")
     title = f"☀️ Good Morning! Happy {weekday_name}{badge}"
@@ -602,6 +665,7 @@ def _build_teams_payload(
         "management": "C19A6B",
         "philosophy": "2D6A4F",
         "article": "E85D04",
+        "interaction": "5B5FC7",
     }
     section: dict = {
         "activityTitle": title,
@@ -648,9 +712,9 @@ def _would_use_ai_today(today: date) -> bool:
     forced = os.environ.get("FORCE_MESSAGE_TYPE", "").lower()
     if forced == "ai":
         return True
-    if forced in ("static", "management", "philosophy", "article"):
+    if forced in ("static", "management", "philosophy", "article", "interaction"):
         return False
-    if is_management_quote_day(today) or is_philosophy_quote_day(today) or is_article_insight_day(today):
+    if is_management_quote_day(today) or is_philosophy_quote_day(today) or is_article_insight_day(today) or is_interaction_day(today):
         return False
     return should_use_ai(today)
 

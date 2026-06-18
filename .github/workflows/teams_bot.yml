@@ -15,6 +15,7 @@ on:
           - ""
           - ai
           - article
+          - interaction
           - static
           - management
           - philosophy
@@ -58,6 +59,7 @@ jobs:
           MAJOR_NEWS_THRESHOLD: ${{ vars.MAJOR_NEWS_THRESHOLD || '70' }}
           TEAMS_WEBHOOK_FORMAT: ${{ vars.TEAMS_WEBHOOK_FORMAT || 'auto' }}
           MANAGEMENT_QUOTE_WEEKDAY: ${{ vars.MANAGEMENT_QUOTE_WEEKDAY || '2' }}
+          INTERACTION_FORMS_URL: ${{ vars.INTERACTION_FORMS_URL || '' }}
           FORCE_MESSAGE_TYPE: ${{ github.event.inputs.force_message_type || '' }}
           SKIP_WORKDAY_CHECK: ${{ github.event.inputs.skip_workday_check && 'true' || '' }}
         run: python main.py

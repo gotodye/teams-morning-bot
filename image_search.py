@@ -55,6 +55,14 @@ ARTICLE_KEYWORDS: list[str] = [
     "journal notebook thoughtful",
 ]
 
+INTERACTION_KEYWORDS: list[str] = [
+    "team collaboration chat office",
+    "colleagues talking coffee break",
+    "group discussion teamwork",
+    "friendly workplace conversation",
+    "team meeting smile diverse",
+]
+
 
 def build_search_query(today: date, message: str, source: str) -> str:
     """Build image search keywords from weekday, message, and source type."""
@@ -69,6 +77,10 @@ def build_search_query(today: date, message: str, source: str) -> str:
     if source == "article":
         digest = int(hashlib.md5(message.encode()).hexdigest(), 16)
         return ARTICLE_KEYWORDS[digest % len(ARTICLE_KEYWORDS)]
+
+    if source == "interaction":
+        digest = int(hashlib.md5(message.encode()).hexdigest(), 16)
+        return INTERACTION_KEYWORDS[digest % len(INTERACTION_KEYWORDS)]
 
     weekday_pool = WEEKDAY_KEYWORDS.get(today.weekday(), ["morning greeting"])
     digest = int(hashlib.md5(message.encode()).hexdigest(), 16)
