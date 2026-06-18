@@ -330,17 +330,90 @@ def build_message(today: date) -> tuple[str, str]:
     return pick_static_message(today), "static"
 
 
-def send_to_teams(
+def _is_powerautomate_webhook(webhook_url: str) -> bool:
+    return "powerplatform.com" in webhook_url or "powerautomate" in webhook_url
+
+
+def _resolve_webhook_format(webhook_url: str) -> str:
+    """Resolve payload format: adaptive, messagecard, or simple."""
+    fmt = os.environ.get("TEAMS_WEBHOOK_FORMAT", "auto").lower()
+    if fmt != "auto":
+        return fmt
+    if _is_powerautomate_webhook(webhook_url):
+        return "adaptive"
+    return "messagecard"
+
+
+def _build_adaptive_card(
+    title: str,
+    subtitle: str,
+    message: str,
+    image_url: str | None,
+) -> dict:
+    """Build Adaptive Card — most reliable image rendering in Teams."""
+    body: list[dict] = [
+        {
+            "type": "TextBlock",
+            "text": title,
+            "weight": "Bolder",
+            "size": "Large",
+            "wrap": True,
+        },
+        {
+            "type": "TextBlock",
+            "text": subtitle,
+            "isSubtle": True,
+            "spacing": "Small",
+            "wrap": True,
+        },
+    ]
+    if image_url:
+        body.append(
+            {
+                "type": "Image",
+                "url": image_url,
+                "size": "Stretch",
+                "altText": "Today's theme image",
+                "spacing": "Medium",
+            }
+        )
+    body.append(
+        {
+            "type": "TextBlock",
+            "text": message,
+            "wrap": True,
+            "spacing": "Medium",
+        }
+    )
+    return {
+        "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+        "type": "AdaptiveCard",
+        "version": "1.5",
+        "body": body,
+    }
+
+
+def _wrap_adaptive_card(card: dict) -> dict:
+    """Teams / Power Automate standard envelope for Adaptive Cards."""
+    return {
+        "type": "message",
+        "attachments": [
+            {
+                "contentType": "application/vnd.microsoft.card.adaptive",
+                "content": card,
+            }
+        ],
+    }
+
+
+def _build_teams_payload(
     message: str,
     today: date,
-    source: str = "static",
-    image_url: str | None = None,
-) -> None:
-    """透過 Teams Incoming Webhook 發送 MessageCard（可附主題圖片）。"""
-    webhook_url = os.environ.get("TEAMS_WEBHOOK_URL")
-    if not webhook_url:
-        raise RuntimeError("請設定 TEAMS_WEBHOOK_URL 環境變數")
-
+    source: str,
+    image_url: str | None,
+    webhook_url: str,
+) -> dict:
+    """Build payload for Adaptive Card, MessageCard, or plain text."""
     weekday_name = WEEKDAY_NAMES[today.weekday()]
     badges = {
         "ai": " ✨ AI Crafted",
@@ -348,6 +421,33 @@ def send_to_teams(
         "philosophy": " 🪶 Philosophy Moment",
     }
     badge = badges.get(source, "")
+    title = f"☀️ Good Morning! Happy {weekday_name}{badge}"
+    subtitle = today.strftime("%B %d, %Y")
+
+    webhook_format = _resolve_webhook_format(webhook_url)
+
+    if webhook_format == "simple":
+        body = f"**{title}**\n_{subtitle}_\n\n{message}"
+        if image_url:
+            body += f"\n\n![Today's Theme]({image_url})"
+        return {"text": body}
+
+    if webhook_format == "adaptive":
+        card = _build_adaptive_card(title, subtitle, message, image_url)
+        payload = _wrap_adaptive_card(card)
+        # Extra fields for Power Automate templates that map individual fields
+        payload["title"] = title
+        payload["text"] = message
+        payload["subtitle"] = subtitle
+        if image_url:
+            payload["image"] = image_url
+            payload["imageUrl"] = image_url
+        payload["card"] = card
+        # Power Automate webhook template checks Body?['Attachments'] (capital A)
+        if payload.get("attachments"):
+            payload["Attachments"] = payload["attachments"]
+        return payload
+
     theme_colors = {
         "static": "0078D4",
         "ai": "6264A7",
@@ -355,20 +455,34 @@ def send_to_teams(
         "philosophy": "2D6A4F",
     }
     section: dict = {
-        "activityTitle": f"☀️ Good Morning! Happy {weekday_name}{badge}",
-        "activitySubtitle": today.strftime("%B %d, %Y"),
+        "activityTitle": title,
+        "activitySubtitle": subtitle,
         "text": message,
     }
     if image_url:
         section["images"] = [{"image": image_url, "title": "Today's Theme"}]
 
-    payload = {
+    return {
         "@type": "MessageCard",
         "@context": "http://schema.org/extensions",
         "themeColor": theme_colors.get(source, "0078D4"),
         "summary": f"Morning Boost — {today.isoformat()}",
         "sections": [section],
     }
+
+
+def send_to_teams(
+    message: str,
+    today: date,
+    source: str = "static",
+    image_url: str | None = None,
+) -> None:
+    """Send message to Teams via Incoming Webhook or Power Automate."""
+    webhook_url = os.environ.get("TEAMS_WEBHOOK_URL")
+    if not webhook_url:
+        raise RuntimeError("Please set TEAMS_WEBHOOK_URL environment variable")
+
+    payload = _build_teams_payload(message, today, source, image_url, webhook_url)
 
     response = requests.post(
         webhook_url,

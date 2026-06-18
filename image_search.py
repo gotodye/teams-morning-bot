@@ -141,6 +141,16 @@ def _search_wikimedia(query: str) -> str | None:
     return random.choice(candidates)
 
 
+def validate_image_url(url: str) -> bool:
+    """Verify image URL is reachable before sending to Teams."""
+    try:
+        response = requests.head(url, timeout=8, allow_redirects=True)
+        content_type = response.headers.get("Content-Type", "")
+        return response.status_code == 200 and content_type.startswith("image/")
+    except Exception:
+        return False
+
+
 def find_theme_image(today: date, message: str, source: str) -> str | None:
     """
     搜尋符合主題的公開圖片 URL。
@@ -160,9 +170,11 @@ def find_theme_image(today: date, message: str, source: str) -> str | None:
     for name, search_fn in providers:
         try:
             url = search_fn(query)
-            if url:
+            if url and validate_image_url(url):
                 logger.info("圖片來源：%s → %s", name, url)
                 return url
+            if url:
+                logger.warning("圖片 URL 無效，跳過：%s", url)
         except Exception:
             logger.warning("圖片搜尋失敗（%s）", name, exc_info=True)
 
