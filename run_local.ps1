@@ -47,8 +47,9 @@ Write-Host "Choose test mode:" -ForegroundColor Cyan
 Write-Host "  1) Preview (no send, recommended first)"
 Write-Host "  2) Send one message (today)"
 Write-Host "  3) Send batch of 5 messages"
+Write-Host "  4) Validate only (full pipeline, no Teams send)"
 Write-Host ""
-$choice = Read-Host "Enter 1 / 2 / 3 (default 1)"
+$choice = Read-Host "Enter 1 / 2 / 3 / 4 (default 1)"
 if (-not $choice) { $choice = "1" }
 
 switch ($choice) {
@@ -83,6 +84,11 @@ switch ($choice) {
         Write-Host ""
         Write-Host ">>> Sending 5 test messages to Teams..." -ForegroundColor Green
         python test_batch.py
+    }
+    "4" {
+        Write-Host ""
+        Write-Host ">>> Validate only: message + news + image + payload (no Teams send)" -ForegroundColor Yellow
+        python main.py --validate-only
     }
     default {
         Write-Host "[ERROR] Invalid option" -ForegroundColor Red

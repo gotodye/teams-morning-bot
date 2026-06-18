@@ -2,6 +2,8 @@
 
 每天週一至週五（排除台灣國定假日）早上 **08:00（台灣時間）** 自動發送晨間問候到 Microsoft Teams 群組。
 
+另含 **HR 戰略決策快報** 模組：每日 **07:00（台灣時間）** 自動抓取 HBR、Josh Bersin、McKinsey 等來源，生成 CHRO 風格快報並發送至 Teams。
+
 ## 功能特色
 
 - 透過 Teams Incoming Webhook 發送訊息
@@ -9,16 +11,21 @@
 - **混合模式（預設）**：多數日子使用靜態金句（方案 A），約每兩週隨機一天改用 AI 生成（方案 B）
 - **主題配圖**：依訊息內容自動搜尋網路圖片，附在 Teams 卡片中一併發送
 - 也可強制切換為純靜態或純 AI 模式
+- **HR 戰略快報**：每日自動生成 350–400 字 CHRO Newsletter，向上管理 CEO
 - GitHub Actions 定時排程，免費雲端執行
 
 ## 專案結構
 
 ```
 teams-morning-bot/
-├── main.py                        # 主程式（假日判斷、訊息生成、Teams 發送）
-├── messages.py                    # 方案 A 靜態訊息資料庫
-├── requirements.txt               # Python 相依套件
-├── .github/workflows/teams_bot.yml  # GitHub Actions 排程
+├── main.py                          # 晨間問候主程式
+├── hr_main.py                       # HR 戰略快報主程式
+├── hr_sources.py                    # 全球 HR 媒體 RSS 抓取
+├── hr_newsletter.py                 # CHRO 快報 AI 生成
+├── messages.py                      # 方案 A 靜態訊息資料庫
+├── requirements.txt
+├── .github/workflows/teams_bot.yml      # 晨間問候排程（週一至五 08:00）
+├── .github/workflows/hr_newsletter.yml  # HR 快報排程（每日 07:00）
 └── README.md
 ```
 
@@ -142,6 +149,15 @@ Workflow 使用 cron 表達式 `0 0 * * 1-5`：
 
 圖片搜尋依「星期主題 + 訊息內容」組合英文關鍵字，無需額外 API Key 也能透過 Wikimedia Commons 取得配圖。若設定 `UNSPLASH_ACCESS_KEY` 或 `PEXELS_API_KEY`，圖片品質會更好。
 
+**Power Automate 使用者（穩定顯示圖片）**：程式已改為發送 **Adaptive Card** 格式。請在 Power Automate 編輯你的 Workflow：
+
+1. 開啟 Teams → 頻道 → Workflows → 編輯現有 workflow
+2. 將發送動作改為 **「Post adaptive card in a chat or channel」**（在聊天室或頻道中發佈卡片）
+3. Adaptive Card 內容使用運算式：`@{triggerBody()?['card']}`
+4. 儲存 workflow 後，到 GitHub Actions 手動 Run workflow 測試
+
+若圖片仍不顯示，可在 GitHub Variables 設定 `TEAMS_WEBHOOK_FORMAT=adaptive`（預設 auto 已自動判斷）。
+
 ## 批次測試發送
 
 設定好 Webhook 後，可一次發送連續 5 個工作日的測試訊息：
@@ -210,6 +226,71 @@ python main.py
 ```
 
 > Linux / macOS 請將 `set` 改為 `export`。
+
+---
+
+## HR 戰略決策快報（每日 07:00）
+
+### 運作方式
+
+1. 每日自動抓取 HBR、Josh Bersin、McKinsey、Google News HR 等來源（近 48 小時）
+2. 以 CHRO 人設與三段式格式，透過 AI 生成 350–400 字快報
+3. 透過 Teams Adaptive Card 發送（**建議發給 CEO 個人私訊**，見下方設定）
+
+### 發送給「某一個人」而非頻道
+
+Teams Webhook 本身不能指定收件人，需用 **Power Automate** 建立「Webhook → 個人聊天」流程。
+
+**完整圖文教學：** [`docs/hr_teams_dm_setup.md`](docs/hr_teams_dm_setup.md)
+
+快速摘要：
+
+1. Power Automate 建立「收到 Webhook 要求時」觸發的流程
+2. 新增動作：**在聊天室或頻道中張貼卡片**
+3. 張貼位置選 **聊天室（Chat）**，收件人選 **CEO / 老闆**
+4. 卡片內容填：`@{triggerBody()?['card']}`
+5. 複製 Webhook URL → 設為 `HR_TEAMS_WEBHOOK_URL`
+
+> 收件人只在 Power Automate 裡設定，程式與 GitHub Secret **不需要**填 Email。
+
+### 排程
+
+Workflow：`HR Strategic Newsletter`
+
+- **Cron**：`0 23 * * *`（UTC 23:00 = 台灣時間次日 **07:00**）
+- 支援 `workflow_dispatch` 手動觸發測試
+
+### GitHub Secrets / Variables
+
+| 名稱 | 說明 | 必填 |
+|---|---|---|
+| `HR_TEAMS_WEBHOOK_URL` | 發給**個人**的 Power Automate Webhook URL | ✅ 建議（見 `docs/hr_teams_dm_setup.md`） |
+| `TEAMS_WEBHOOK_URL` | 共用 Webhook（備援） | ✅ |
+| `OPENAI_API_KEY` | OpenAI API Key | ✅（或改用 Gemini） |
+| `GEMINI_API_KEY` | Gemini API Key | 選填 |
+
+### 本機測試
+
+```powershell
+cd C:\Users\Angus\Projects\teams-morning-bot
+
+# 預覽模式（不發送 Teams，需在 .env 設定 API Key）
+.\preview_hr.bat
+
+# 實際發送
+set OPENAI_API_KEY=sk-...
+set HR_TEAMS_WEBHOOK_URL=https://your-webhook-url
+python hr_main.py
+```
+
+### Power Automate 設定（個人私訊）
+
+請依 [`docs/hr_teams_dm_setup.md`](docs/hr_teams_dm_setup.md) 設定「Webhook → 個人聊天」。
+
+動作使用 **「Post adaptive card in a chat or channel」**：
+- 張貼位置：**Chat（聊天室）**，不是 Channel
+- 收件人：指定那位主管
+- Adaptive Card：`@{triggerBody()?['card']}`
 
 ## 授權
 
