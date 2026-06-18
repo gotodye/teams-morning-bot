@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
 import logging
@@ -37,6 +38,9 @@ TZ_TAIWAN = ZoneInfo("Asia/Taipei")
 WEEKDAY_NAMES = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 DEFAULT_AI_WORKDAY_INTERVAL = 10
 DEFAULT_MANAGEMENT_QUOTE_WEEKDAY = 2  # Wednesday — weekly management wisdom day
+PLACEHOLDER_WEBHOOK_URL = (
+    "https://prod-00.eastus.logic.azure.com/workflows/validate-only-placeholder"
+)
 
 
 def get_today() -> date:
@@ -280,6 +284,41 @@ def _call_openai(prompt: str) -> str:
     return response.json()["choices"][0]["message"]["content"].strip()
 
 
+def _extract_gemini_text(data: dict) -> str:
+    """Extract visible text from a Gemini generateContent response."""
+    candidate = data["candidates"][0]
+    finish_reason = candidate.get("finishReason")
+    if finish_reason == "MAX_TOKENS":
+        logger.warning("Gemini response truncated (finishReason=MAX_TOKENS)")
+
+    parts = candidate.get("content", {}).get("parts", [])
+    text = "".join(
+        part["text"]
+        for part in parts
+        if part.get("text") and not part.get("thought")
+    ).strip()
+    if not text:
+        raise RuntimeError(
+            f"Gemini returned empty text (finishReason={finish_reason})"
+        )
+    return text
+
+
+def _gemini_generation_config() -> dict:
+    """Generation settings tuned for short greetings on Gemini 3.x."""
+    model = os.environ.get("GEMINI_MODEL", "gemini-2.0-flash")
+    config: dict = {
+        "temperature": 0.9,
+        "maxOutputTokens": 1024,
+    }
+    # Gemini 3 models spend thinking tokens from the same output budget.
+    if model.startswith("gemini-3"):
+        config["thinkingConfig"] = {"thinkingLevel": "minimal"}
+    else:
+        config["thinkingConfig"] = {"thinkingBudget": 0}
+    return config
+
+
 def _call_gemini(prompt: str) -> str:
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
@@ -295,15 +334,12 @@ def _call_gemini(prompt: str) -> str:
         headers={"Content-Type": "application/json"},
         json={
             "contents": [{"parts": [{"text": prompt}]}],
-            "generationConfig": {
-                "temperature": 0.9,
-                "maxOutputTokens": 200,
-            },
+            "generationConfig": _gemini_generation_config(),
         },
         timeout=30,
     )
     response.raise_for_status()
-    return response.json()["candidates"][0]["content"]["parts"][0]["text"].strip()
+    return _extract_gemini_text(response.json())
 
 
 def build_message(today: date) -> tuple[str, str]:
@@ -495,6 +531,146 @@ def send_to_teams(
     logger.info("Message sent to Teams!")
 
 
+def _would_use_ai_today(today: date) -> bool:
+    """Whether build_message would attempt AI generation for this date."""
+    forced = os.environ.get("FORCE_MESSAGE_TYPE", "").lower()
+    if forced == "ai":
+        return True
+    if forced in ("static", "management", "philosophy"):
+        return False
+    if is_management_quote_day(today) or is_philosophy_quote_day(today):
+        return False
+    return should_use_ai(today)
+
+
+def _audit_configuration(today: date) -> tuple[list[str], list[str]]:
+    """Return (errors, warnings) for environment and schedule checks."""
+    errors: list[str] = []
+    warnings: list[str] = []
+
+    webhook = os.environ.get("TEAMS_WEBHOOK_URL", "").strip()
+    if not webhook:
+        warnings.append(
+            "TEAMS_WEBHOOK_URL not set — payload preview uses a placeholder URL "
+            "(fine for GitHub Actions if the secret is configured there)"
+        )
+    elif not webhook.startswith("https://"):
+        errors.append("TEAMS_WEBHOOK_URL must start with https://")
+
+    provider = os.environ.get("AI_PROVIDER", "openai").lower()
+    if _would_use_ai_today(today):
+        key_name = "GEMINI_API_KEY" if provider == "gemini" else "OPENAI_API_KEY"
+        if not os.environ.get(key_name, "").strip():
+            errors.append(f"AI is scheduled today but {key_name} is not set")
+
+    skip_check = os.environ.get("SKIP_WORKDAY_CHECK", "").lower() == "true"
+    if not skip_check and not is_workday(today):
+        warnings.append(
+            f"Today ({today.isoformat()}, {WEEKDAY_NAMES[today.weekday()]}) is not a "
+            "workday — a normal run would skip without sending"
+        )
+
+    return errors, warnings
+
+
+def _preview_text(text: str, limit: int = 240) -> str:
+    compact = " ".join(text.split())
+    if len(compact) <= limit:
+        return compact
+    return f"{compact[: limit - 3]}..."
+
+
+def run_validate_only(today: date) -> int:
+    """Exercise the full pipeline without posting to Teams."""
+    logger.info("Validate-only mode — no message will be sent to Teams")
+
+    errors, warnings = _audit_configuration(today)
+    for warning in warnings:
+        logger.warning("Config: %s", warning)
+    for error in errors:
+        logger.error("Config: %s", error)
+
+    ai_scheduled = _would_use_ai_today(today)
+
+    try:
+        message, source = build_message(today)
+    except Exception:
+        logger.exception("build_message failed")
+        return 1
+
+    if ai_scheduled and source != "ai":
+        warnings.append("AI was scheduled but fell back to a static message — check API keys or logs above")
+
+    news_appendix = ""
+    if os.environ.get("ENABLE_MAJOR_NEWS", "true").lower() != "false":
+        try:
+            news_appendix = find_major_news(today) or ""
+            if news_appendix:
+                logger.info("Major news appendix would be appended (%d chars)", len(news_appendix))
+            else:
+                logger.info("Major news check complete — nothing above threshold")
+        except Exception:
+            logger.warning("Major news check failed", exc_info=True)
+            warnings.append("Major news fetch failed — see log for details")
+    else:
+        logger.info("Major news disabled (ENABLE_MAJOR_NEWS=false)")
+
+    if news_appendix:
+        message += news_appendix
+
+    image_url: str | None = None
+    if os.environ.get("ENABLE_IMAGES", "true").lower() != "false":
+        try:
+            image_url = find_theme_image(today, message, source)
+            if image_url:
+                logger.info("Theme image found: %s", image_url)
+            else:
+                logger.info("No theme image found — text-only card")
+        except Exception:
+            logger.warning("Theme image search failed", exc_info=True)
+            warnings.append("Image search failed — see log for details")
+    else:
+        logger.info("Images disabled (ENABLE_IMAGES=false)")
+
+    webhook = os.environ.get("TEAMS_WEBHOOK_URL", "").strip() or PLACEHOLDER_WEBHOOK_URL
+    try:
+        payload = _build_teams_payload(message, today, source, image_url, webhook)
+        json.dumps(payload, ensure_ascii=False)
+    except Exception:
+        logger.exception("Payload build failed")
+        return 1
+
+    webhook_format = _resolve_webhook_format(webhook)
+    if webhook_format == "adaptive":
+        if payload.get("attachments") and not payload.get("Attachments"):
+            errors.append("Adaptive payload missing Attachments alias for Power Automate")
+        if not payload.get("card"):
+            errors.append("Adaptive payload missing card field")
+
+    logger.info("--- Validation summary ---")
+    logger.info("Date: %s (%s)", today.isoformat(), WEEKDAY_NAMES[today.weekday()])
+    logger.info("Message source: %s", source)
+    logger.info("Webhook format: %s", webhook_format)
+    logger.info("Message preview: %s", _preview_text(message))
+    logger.info("Image: %s", image_url or "(none)")
+    logger.info("Payload keys: %s", ", ".join(sorted(payload.keys())))
+    if webhook_format == "adaptive":
+        attachment_count = len(payload.get("attachments") or [])
+        logger.info("Adaptive attachments: %d", attachment_count)
+
+    for warning in warnings:
+        logger.warning("WARN: %s", warning)
+    for error in errors:
+        logger.error("FAIL: %s", error)
+
+    if errors:
+        logger.error("Validation failed (%d error(s), %d warning(s))", len(errors), len(warnings))
+        return 1
+
+    logger.info("Validation passed (%d warning(s)) — no message was sent", len(warnings))
+    return 0
+
+
 def run_for_date(today: date) -> int:
     """執行指定日期的推播。"""
     skip_check = os.environ.get("SKIP_WORKDAY_CHECK", "").lower() == "true"
@@ -519,9 +695,26 @@ def run_for_date(today: date) -> int:
     return 0
 
 
-def main() -> int:
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Teams morning bot — weekday greetings to Microsoft Teams.",
+    )
+    parser.add_argument(
+        "--validate-only",
+        action="store_true",
+        help="Run the full pipeline (message, news, image, payload) without sending to Teams",
+    )
+    return parser.parse_args(argv)
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = parse_args(argv)
     today = get_today()
     logger.info("Taiwan time date: %s", today.isoformat())
+
+    if args.validate_only:
+        os.environ.setdefault("SKIP_WORKDAY_CHECK", "true")
+        return run_validate_only(today)
 
     try:
         return run_for_date(today)
