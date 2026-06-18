@@ -141,10 +141,32 @@ def _search_wikimedia(query: str) -> str | None:
     return random.choice(candidates)
 
 
+def _fallback_picsum(query: str) -> str:
+    """Reliable public image fallback when search APIs are unavailable."""
+    seed = hashlib.md5(query.encode()).hexdigest()[:12]
+    return f"https://picsum.photos/seed/morning-{seed}/800/400"
+
+
 def validate_image_url(url: str) -> bool:
     """Verify image URL is reachable before sending to Teams."""
+    headers = {"User-Agent": "teams-morning-bot/1.0"}
     try:
-        response = requests.head(url, timeout=8, allow_redirects=True)
+        response = requests.head(
+            url, timeout=8, allow_redirects=True, headers=headers
+        )
+        if response.status_code == 200:
+            content_type = response.headers.get("Content-Type", "")
+            if content_type.startswith("image/"):
+                return True
+
+        # Some CDNs (e.g. Wikimedia) reject HEAD — try a lightweight GET.
+        response = requests.get(
+            url,
+            timeout=8,
+            allow_redirects=True,
+            stream=True,
+            headers=headers,
+        )
         content_type = response.headers.get("Content-Type", "")
         return response.status_code == 200 and content_type.startswith("image/")
     except Exception:
@@ -154,13 +176,13 @@ def validate_image_url(url: str) -> bool:
 def find_theme_image(today: date, message: str, source: str) -> str | None:
     """
     搜尋符合主題的公開圖片 URL。
-    優先順序：Unsplash → Pexels → Wikimedia Commons。
+    優先順序：Unsplash → Pexels → Wikimedia Commons → Picsum 備援。
     """
     if os.environ.get("ENABLE_IMAGES", "true").lower() == "false":
         return None
 
     query = build_search_query(today, message, source)
-    logger.info("圖片搜尋關鍵字：%s", query)
+    logger.info("Image search keywords: %s", query)
 
     providers = [
         ("Unsplash", _search_unsplash),
@@ -171,11 +193,17 @@ def find_theme_image(today: date, message: str, source: str) -> str | None:
         try:
             url = search_fn(query)
             if url and validate_image_url(url):
-                logger.info("圖片來源：%s → %s", name, url)
+                logger.info("Image source: %s -> %s", name, url)
                 return url
             if url:
-                logger.warning("圖片 URL 無效，跳過：%s", url)
+                logger.warning("Image URL failed validation, skipping: %s", url)
         except Exception:
-            logger.warning("圖片搜尋失敗（%s）", name, exc_info=True)
+            logger.warning("Image search failed (%s)", name, exc_info=True)
 
+    fallback = _fallback_picsum(query)
+    if validate_image_url(fallback):
+        logger.info("Image source: Picsum fallback -> %s", fallback)
+        return fallback
+
+    logger.warning("All image providers failed for query: %s", query)
     return None
