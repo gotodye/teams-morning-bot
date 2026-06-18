@@ -4,7 +4,24 @@ on:
   schedule:
     # Taiwan time Mon-Fri 08:00 (UTC+8 → UTC 00:00)
     - cron: "0 0 * * 1-5"
-  workflow_dispatch: # 允許手動觸發測試
+  workflow_dispatch:
+    inputs:
+      force_message_type:
+        description: "Force message type (empty = normal schedule)"
+        required: false
+        default: ""
+        type: choice
+        options:
+          - ""
+          - ai
+          - static
+          - management
+          - philosophy
+      skip_workday_check:
+        description: "Skip workday/holiday check (testing only)"
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   send-morning-message:
@@ -24,18 +41,15 @@ jobs:
       - name: Send morning message to Teams
         env:
           TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
-          # 訊息模式：mixed（預設，A+B 混合）、static（僅 A）、ai（僅 B）
           MESSAGE_MODE: ${{ vars.MESSAGE_MODE || 'mixed' }}
           MESSAGE_STRATEGY: ${{ vars.MESSAGE_STRATEGY || 'random' }}
           AI_SCHEDULE_STRATEGY: ${{ vars.AI_SCHEDULE_STRATEGY || 'biweekly' }}
           AI_WORKDAY_INTERVAL: ${{ vars.AI_WORKDAY_INTERVAL || '10' }}
-          # 方案 B — AI 設定（混合模式下約兩週使用一次）
           AI_PROVIDER: ${{ vars.AI_PROVIDER || 'openai' }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'gpt-4o-mini' }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODEL: ${{ vars.GEMINI_MODEL || 'gemini-2.0-flash' }}
-          # 主題配圖（選填，未設定時使用 Wikimedia 免費搜尋）
           UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
           ENABLE_IMAGES: ${{ vars.ENABLE_IMAGES || 'true' }}
@@ -43,4 +57,6 @@ jobs:
           MAJOR_NEWS_THRESHOLD: ${{ vars.MAJOR_NEWS_THRESHOLD || '70' }}
           TEAMS_WEBHOOK_FORMAT: ${{ vars.TEAMS_WEBHOOK_FORMAT || 'auto' }}
           MANAGEMENT_QUOTE_WEEKDAY: ${{ vars.MANAGEMENT_QUOTE_WEEKDAY || '2' }}
+          FORCE_MESSAGE_TYPE: ${{ github.event.inputs.force_message_type || '' }}
+          SKIP_WORKDAY_CHECK: ${{ github.event.inputs.skip_workday_check && 'true' || '' }}
         run: python main.py
