@@ -42,7 +42,10 @@ def main() -> int:
     today = get_today()
     urls = get_hr_webhook_urls()
     if not urls:
-        print("ERROR: Set HR_TEAMS_WEBHOOK_URL in .env")
+        print(
+            "ERROR: Set HR_TEAMS_WEBHOOK_URL in .env "
+            "(Power Automate DM webhook — not TEAMS_WEBHOOK_URL channel webhook)"
+        )
         return 1
 
     if any("sig=" not in u for u in urls):

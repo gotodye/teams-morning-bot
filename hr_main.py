@@ -94,13 +94,14 @@ def _wrap_adaptive_card(card: dict) -> dict:
 
 
 def get_hr_webhook_urls() -> list[str]:
-    """Return all HR webhook URLs (comma-separated in env)."""
-    raw = (
-        os.environ.get("HR_TEAMS_WEBHOOK_URL")
-        or os.environ.get("TEAMS_WEBHOOK_URL")
-        or ""
-    ).strip()
+    """Return HR Power Automate webhook URLs (never fall back to channel webhooks)."""
+    raw = os.environ.get("HR_TEAMS_WEBHOOK_URL", "").strip()
     if not raw:
+        if os.environ.get("TEAMS_WEBHOOK_URL", "").strip():
+            logger.error(
+                "TEAMS_WEBHOOK_URL is set but HR_TEAMS_WEBHOOK_URL is missing. "
+                "HR newsletter must use the Power Automate DM webhook, not the channel webhook."
+            )
         return []
 
     urls: list[str] = []
@@ -121,7 +122,10 @@ def get_hr_webhook_urls() -> list[str]:
 def send_hr_newsletter_to_teams(newsletter: str, subject: str, today: date) -> None:
     webhook_urls = get_hr_webhook_urls()
     if not webhook_urls:
-        raise RuntimeError("請設定 HR_TEAMS_WEBHOOK_URL 或 TEAMS_WEBHOOK_URL")
+        raise RuntimeError(
+            "請設定 HR_TEAMS_WEBHOOK_URL（Power Automate 私訊 Webhook）。"
+            "不可使用 TEAMS_WEBHOOK_URL（頻道），否則會誤發到 HK-ALL 等群組。"
+        )
 
     title = subject if subject.startswith("【") else f"【HR 戰略快報】{subject}"
     subtitle = today.strftime("%Y年%m月%d日 · CHRO 每日戰略決策快報")

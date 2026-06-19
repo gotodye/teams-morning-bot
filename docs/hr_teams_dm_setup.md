@@ -109,7 +109,9 @@ HR_TEAMS_WEBHOOK_URL_EXTRA=https://...winnie流程的URL...
 第一次由 Flow bot 主動私訊前，必須先有這一步，否則訊息可能送不出去（流程仍會顯示成功）。
 
 ### Q：和頻道 Webhook 可以共用嗎？
-**不建議。** HR 快報請用獨立的 `HR_TEAMS_WEBHOOK_URL`（指向個人聊天 Workflow），晨間問候繼續用 `TEAMS_WEBHOOK_URL`（頻道）。
+**不可以。** HR 快報**只能**用 `HR_TEAMS_WEBHOOK_URL`（Power Automate 私訊）。  
+若未設定而誤用 `TEAMS_WEBHOOK_URL`（頻道），訊息會發到 HK-ALL 等群組，Angus / Winnie 私訊收不到。  
+晨間問候繼續用 `TEAMS_WEBHOOK_URL`（頻道），兩者分開設定。
 
 ---
 
@@ -117,8 +119,10 @@ HR_TEAMS_WEBHOOK_URL_EXTRA=https://...winnie流程的URL...
 
 部署到雲端時，在 GitHub repo → **Settings** → **Secrets** 新增：
 
-| Secret | 值 |
-|---|---|
-| `HR_TEAMS_WEBHOOK_URL` | 上方步驟 1 複製的 Power Automate URL |
+| Secret | 值 | 必填 |
+|---|---|---|
+| `HR_TEAMS_WEBHOOK_URL` | Power Automate「HR Newsletter Test to Me」HTTP POST URL（含 `sig=`） | ✅ |
+| `HR_TEAMS_WEBHOOK_URL_EXTRA` | 第二位收件人的獨立流程 URL（若用單流程雙 Post card 步驟則不需要） | 選填 |
+| `OPENAI_API_KEY` | AI 生成快報 | ✅ |
 
-不需在程式或 Secret 裡填寫收件人 Email——收件人只在 Power Automate Workflow 中設定。
+> GitHub Actions 若未設定 `HR_TEAMS_WEBHOOK_URL`，workflow 會在第一步直接失敗，**不會**再誤發到頻道。

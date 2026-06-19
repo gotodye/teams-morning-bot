@@ -264,8 +264,7 @@ Workflow：`HR Strategic Newsletter`
 
 | 名稱 | 說明 | 必填 |
 |---|---|---|
-| `HR_TEAMS_WEBHOOK_URL` | 發給**個人**的 Power Automate Webhook URL | ✅ 建議（見 `docs/hr_teams_dm_setup.md`） |
-| `TEAMS_WEBHOOK_URL` | 共用 Webhook（備援） | ✅ |
+| `HR_TEAMS_WEBHOOK_URL` | 發給**個人**的 Power Automate Webhook URL | ✅ **必填**（見 `docs/hr_teams_dm_setup.md`） |
 | `OPENAI_API_KEY` | OpenAI API Key | ✅（或改用 Gemini） |
 | `GEMINI_API_KEY` | Gemini API Key | 選填 |
 
