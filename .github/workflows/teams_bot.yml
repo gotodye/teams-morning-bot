@@ -1,9 +1,9 @@
 name: Teams Morning Bot
 
+# Scheduled by Power Automate at 08:00 Taiwan time (Mon–Fri).
+# GitHub cron removed — PA calls workflow_dispatch via GitHub API.
+# See docs/power_automate_schedule.md
 on:
-  schedule:
-    # Taiwan time Mon-Fri 08:00 (UTC+8 → UTC 00:00)
-    - cron: "0 0 * * 1-5"
   workflow_dispatch:
     inputs:
       force_message_type:
