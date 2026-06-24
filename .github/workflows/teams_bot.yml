@@ -1,10 +1,8 @@
 name: Teams Morning Bot
 
-# Cloud schedule: GitHub cron Mon–Fri ~08:00 Taipei (no PC required).
-# Free tier may delay runs by 1–5 hours; see docs/cloud_schedule.md for exact 08:00.
+# Scheduled by cron-job.org at 08:00 Taipei Mon–Fri (cloud, no PC required).
+# See docs/cloud_schedule.md
 on:
-  schedule:
-    - cron: "0 0 * * 1-5"
   workflow_dispatch:
     inputs:
       force_message_type:
