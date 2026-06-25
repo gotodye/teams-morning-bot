@@ -49,14 +49,23 @@ def send_test_batch(count: int = 5, delay_seconds: int = 3) -> int:
             os.environ.pop("FORCE_MESSAGE_TYPE", None)
 
         try:
-            message, source = build_message(day)
-            image_url = find_theme_image(day, message, source)
+            message, source, image_meta = build_message(day)
+            image_url = find_theme_image(
+                day,
+                message,
+                source,
+                image_query=image_meta.get("image_query") or None,
+                mood=image_meta.get("mood") or None,
+            )
+            static_format = image_meta.get("static_format") or None
             logger.info("[%d/%d] %s (%s)", index, count, day.isoformat(), source)
             logger.info("  訊息：%s", message)
             logger.info("  配圖：%s", image_url or "（無）")
 
             if not dry_run:
-                send_to_teams(message, day, source, image_url)
+                send_to_teams(
+                    message, day, source, image_url, static_format=static_format
+                )
                 logger.info("[%d/%d] 發送成功", index, count)
         except Exception:
             logger.exception("[%d/%d] %s失敗：%s", index, count, "預覽" if dry_run else "發送", day.isoformat())

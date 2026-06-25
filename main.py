@@ -21,11 +21,11 @@ from articles import pick_article
 from interactions import pick_interaction
 from messages import (
     MANAGEMENT_QUOTES,
-    MESSAGES,
     PHILOSOPHY_QUOTES,
     build_card_subtitle,
     build_card_title,
 )
+from static_messages import StaticPick, pick_static_message
 from image_search import find_theme_image
 from news import find_major_news
 
@@ -310,11 +310,60 @@ def pick_philosophy_quote(today: date) -> str:
     return _pick_from_pool(PHILOSOPHY_QUOTES, today)
 
 
-def pick_static_message(today: date) -> str:
-    """Scheme A: pick a creative greeting from the static database."""
-    message = _pick_from_pool(MESSAGES, today)
-    weekday_name = WEEKDAY_NAMES[today.weekday()]
-    return message.replace("{weekday}", weekday_name)
+def pick_static_message_text(today: date) -> StaticPick:
+    """Static B+ message with image hints for themed photos."""
+    return pick_static_message(today)
+
+
+def _static_fallback(today: date) -> tuple[str, str, dict[str, str]]:
+    pick = pick_static_message_text(today)
+    return pick.text, "static", _image_meta_from_pick(pick)
+
+
+def _image_meta_from_pick(pick: StaticPick) -> dict[str, str]:
+    meta: dict[str, str] = {"static_format": pick.static_format}
+    if pick.mood:
+        meta["mood"] = pick.mood
+    if pick.image_query:
+        meta["image_query"] = pick.image_query
+    return meta
+
+
+def build_message(today: date) -> tuple[str, str, dict[str, str]]:
+    """
+    Build today's message. Returns (message, source, image_meta).
+    Sources: management | article | philosophy | interaction | ai | static
+    """
+    if is_management_quote_day(today):
+        logger.info("Management quote day — famous leader quote")
+        return pick_management_quote(today), "management", {}
+
+    if is_article_insight_day(today):
+        logger.info("Article insight day — famous article summary")
+        try:
+            return generate_article_insight(today), "article", {}
+        except Exception:
+            logger.warning("Article insight failed — falling back to static", exc_info=True)
+            return _static_fallback(today)
+
+    if is_philosophy_quote_day(today):
+        logger.info("Philosophy quote day — famous philosopher quote")
+        return pick_philosophy_quote(today), "philosophy", {}
+
+    if is_interaction_day(today):
+        logger.info("Interaction day — biweekly channel prompt")
+        return build_interaction_message(today), "interaction", {}
+
+    if should_use_ai(today):
+        logger.info("AI-generated creative message")
+        try:
+            return generate_ai_message(today), "ai", {}
+        except Exception:
+            logger.warning("AI failed — falling back to static message", exc_info=True)
+            return _static_fallback(today)
+
+    logger.info("Static creative message (B+)")
+    return _static_fallback(today)
 
 
 def generate_ai_message(today: date) -> str:
@@ -508,43 +557,6 @@ def build_interaction_message(today: date) -> str:
     return "\n".join(lines)
 
 
-def build_message(today: date) -> tuple[str, str]:
-    """
-    Build today's message. Returns (message, source).
-    Sources: management | article | philosophy | interaction | ai | static
-    """
-    if is_management_quote_day(today):
-        logger.info("Management quote day — famous leader quote")
-        return pick_management_quote(today), "management"
-
-    if is_article_insight_day(today):
-        logger.info("Article insight day — famous article summary")
-        try:
-            return generate_article_insight(today), "article"
-        except Exception:
-            logger.warning("Article insight failed — falling back to static", exc_info=True)
-            return pick_static_message(today), "static"
-
-    if is_philosophy_quote_day(today):
-        logger.info("Philosophy quote day — famous philosopher quote")
-        return pick_philosophy_quote(today), "philosophy"
-
-    if is_interaction_day(today):
-        logger.info("Interaction day — biweekly channel prompt")
-        return build_interaction_message(today), "interaction"
-
-    if should_use_ai(today):
-        logger.info("AI-generated creative message")
-        try:
-            return generate_ai_message(today), "ai"
-        except Exception:
-            logger.warning("AI failed — falling back to static message", exc_info=True)
-            return pick_static_message(today), "static"
-
-    logger.info("Static creative message")
-    return pick_static_message(today), "static"
-
-
 def _is_powerautomate_webhook(webhook_url: str) -> bool:
     return "powerplatform.com" in webhook_url or "powerautomate" in webhook_url
 
@@ -627,11 +639,17 @@ def _build_teams_payload(
     source: str,
     image_url: str | None,
     webhook_url: str,
+    *,
+    static_format: str | None = None,
 ) -> dict:
     """Build payload for Adaptive Card, MessageCard, or plain text."""
     weekday_name = WEEKDAY_NAMES[today.weekday()]
-    title = build_card_title(today, source, weekday_name)
-    subtitle = build_card_subtitle(today, source, weekday_name)
+    title = build_card_title(
+        today, source, weekday_name, static_format=static_format
+    )
+    subtitle = build_card_subtitle(
+        today, source, weekday_name, static_format=static_format
+    )
 
     webhook_format = _resolve_webhook_format(webhook_url)
 
@@ -687,13 +705,17 @@ def send_to_teams(
     today: date,
     source: str = "static",
     image_url: str | None = None,
+    *,
+    static_format: str | None = None,
 ) -> None:
     """Send message to Teams via Incoming Webhook or Power Automate."""
     webhook_url = os.environ.get("TEAMS_WEBHOOK_URL")
     if not webhook_url:
         raise RuntimeError("Please set TEAMS_WEBHOOK_URL environment variable")
 
-    payload = _build_teams_payload(message, today, source, image_url, webhook_url)
+    payload = _build_teams_payload(
+        message, today, source, image_url, webhook_url, static_format=static_format
+    )
 
     response = requests.post(
         webhook_url,
@@ -767,10 +789,12 @@ def run_validate_only(today: date) -> int:
     ai_scheduled = _would_use_ai_today(today)
 
     try:
-        message, source = build_message(today)
+        message, source, image_meta = build_message(today)
     except Exception:
         logger.exception("build_message failed")
         return 1
+
+    static_format = image_meta.get("static_format") or None
 
     if ai_scheduled and source != "ai":
         warnings.append("AI was scheduled but fell back to a static message — check API keys or logs above")
@@ -795,7 +819,13 @@ def run_validate_only(today: date) -> int:
     image_url: str | None = None
     if os.environ.get("ENABLE_IMAGES", "true").lower() != "false":
         try:
-            image_url = find_theme_image(today, message, source)
+            image_url = find_theme_image(
+                today,
+                message,
+                source,
+                image_query=image_meta.get("image_query") or None,
+                mood=image_meta.get("mood") or None,
+            )
             if image_url:
                 logger.info("Theme image found: %s", image_url)
             else:
@@ -808,7 +838,9 @@ def run_validate_only(today: date) -> int:
 
     webhook = os.environ.get("TEAMS_WEBHOOK_URL", "").strip() or PLACEHOLDER_WEBHOOK_URL
     try:
-        payload = _build_teams_payload(message, today, source, image_url, webhook)
+        payload = _build_teams_payload(
+            message, today, source, image_url, webhook, static_format=static_format
+        )
         json.dumps(payload, ensure_ascii=False)
     except Exception:
         logger.exception("Payload build failed")
@@ -824,6 +856,8 @@ def run_validate_only(today: date) -> int:
     logger.info("--- Validation summary ---")
     logger.info("Date: %s (%s)", today.isoformat(), WEEKDAY_NAMES[today.weekday()])
     logger.info("Message source: %s", source)
+    if static_format:
+        logger.info("Static format: %s", static_format)
     logger.info("Webhook format: %s", webhook_format)
     logger.info("Message preview: %s", _preview_text(message))
     logger.info("Image: %s", image_url or "(none)")
@@ -852,20 +886,27 @@ def run_for_date(today: date) -> int:
         logger.info("Non-workday — exiting.")
         return 0
 
-    message, source = build_message(today)
+    message, source, image_meta = build_message(today)
+    static_format = image_meta.get("static_format") or None
     news_appendix = find_major_news(today)
     if news_appendix:
         message += news_appendix
         logger.info("Major news appended")
 
-    image_url = find_theme_image(today, message, source)
+    image_url = find_theme_image(
+        today,
+        message,
+        source,
+        image_query=image_meta.get("image_query") or None,
+        mood=image_meta.get("mood") or None,
+    )
     if image_url:
         logger.info("Theme image found")
     else:
         logger.info("No image found — text only")
 
     logger.info("Message (%s): %s", source, message)
-    send_to_teams(message, today, source, image_url)
+    send_to_teams(message, today, source, image_url, static_format=static_format)
     return 0
 
 

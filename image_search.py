@@ -63,9 +63,27 @@ INTERACTION_KEYWORDS: list[str] = [
     "team meeting smile diverse",
 ]
 
+MOOD_KEYWORDS: dict[str, str] = {
+    "humor": "bright cheerful funny office coffee morning",
+    "warm": "golden sunrise soft morning light peaceful scenic",
+    "nature": "nature landscape green hills peaceful morning scenic",
+    "cute": "cute animal happy pet flowers bright cheerful",
+    "coffee": "morning coffee latte cozy sunshine warm",
+}
 
-def build_search_query(today: date, message: str, source: str) -> str:
-    """Build image search keywords from weekday, message, and source type."""
+
+def build_search_query(
+    today: date,
+    message: str,
+    source: str,
+    *,
+    image_query: str | None = None,
+    mood: str | None = None,
+) -> str:
+    """Build image search keywords from weekday, message, source, and static hints."""
+    if image_query:
+        return image_query
+
     if source == "management":
         digest = int(hashlib.md5(message.encode()).hexdigest(), 16)
         return MANAGEMENT_KEYWORDS[digest % len(MANAGEMENT_KEYWORDS)]
@@ -81,6 +99,9 @@ def build_search_query(today: date, message: str, source: str) -> str:
     if source == "interaction":
         digest = int(hashlib.md5(message.encode()).hexdigest(), 16)
         return INTERACTION_KEYWORDS[digest % len(INTERACTION_KEYWORDS)]
+
+    if mood and mood in MOOD_KEYWORDS:
+        return MOOD_KEYWORDS[mood]
 
     weekday_pool = WEEKDAY_KEYWORDS.get(today.weekday(), ["morning greeting"])
     digest = int(hashlib.md5(message.encode()).hexdigest(), 16)
@@ -197,7 +218,14 @@ def validate_image_url(url: str) -> bool:
         return False
 
 
-def find_theme_image(today: date, message: str, source: str) -> str | None:
+def find_theme_image(
+    today: date,
+    message: str,
+    source: str,
+    *,
+    image_query: str | None = None,
+    mood: str | None = None,
+) -> str | None:
     """
     搜尋符合主題的公開圖片 URL。
     優先順序：Unsplash → Pexels → Wikimedia Commons → Picsum 備援。
@@ -205,7 +233,13 @@ def find_theme_image(today: date, message: str, source: str) -> str | None:
     if os.environ.get("ENABLE_IMAGES", "true").lower() == "false":
         return None
 
-    query = build_search_query(today, message, source)
+    query = build_search_query(
+        today,
+        message,
+        source,
+        image_query=image_query,
+        mood=mood,
+    )
     logger.info("Image search keywords: %s", query)
 
     providers = [
