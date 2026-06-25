@@ -19,7 +19,13 @@ from dotenv import load_dotenv
 
 from articles import pick_article
 from interactions import pick_interaction
-from messages import MANAGEMENT_QUOTES, MESSAGES, PHILOSOPHY_QUOTES
+from messages import (
+    MANAGEMENT_QUOTES,
+    MESSAGES,
+    PHILOSOPHY_QUOTES,
+    build_card_subtitle,
+    build_card_title,
+)
 from image_search import find_theme_image
 from news import find_major_news
 
@@ -624,16 +630,8 @@ def _build_teams_payload(
 ) -> dict:
     """Build payload for Adaptive Card, MessageCard, or plain text."""
     weekday_name = WEEKDAY_NAMES[today.weekday()]
-    badges = {
-        "ai": " ✨ AI Crafted",
-        "management": " 💼 Management Moment",
-        "philosophy": " 🪶 Philosophy Moment",
-        "article": " 📚 Article Insight",
-        "interaction": " 📣 Let's Connect",
-    }
-    badge = badges.get(source, "")
-    title = f"☀️ Good Morning! Happy {weekday_name}{badge}"
-    subtitle = today.strftime("%B %d, %Y")
+    title = build_card_title(today, source, weekday_name)
+    subtitle = build_card_subtitle(today, source, weekday_name)
 
     webhook_format = _resolve_webhook_format(webhook_url)
 

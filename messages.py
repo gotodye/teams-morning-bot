@@ -1,5 +1,9 @@
 """Static morning message database — creative English greetings, humor, fun facts, and management wisdom."""
 
+from __future__ import annotations
+
+from datetime import date
+
 MESSAGES: list[str] = [
     # Creative motivation
     "Good morning! Your brain before coffee is like legacy code — it works, but nobody should touch it before 9 AM. ☕",
@@ -133,3 +137,82 @@ PHILOSOPHY_QUOTES: list[str] = [
     '🪶 Philosophy Moment: "Wonder is the beginning of wisdom." — Socrates',
     '🪶 Philosophy Moment: "The measure of a man is what he does with power." — Plato',
 ]
+
+THEME_TITLES: dict[str, str] = {
+    "management": "💼 Wisdom from the Greats",
+    "article": "📚 This Week's Read",
+    "philosophy": "🪶 A Thought to Carry",
+    "interaction": "📣 Your Turn — Let's Connect",
+    "ai": "✨ Fresh from the Bot Brain",
+}
+
+STATIC_TITLES: list[str] = [
+    "☀️ Rise & Shine — It's {weekday}",
+    "☕ {weekday} Mode: Activated",
+    "⚡ {weekday} — Let's Make It Count",
+    "🌅 Good Vibes Only — Happy {weekday}",
+    "🚀 {weekday} Kickoff",
+    "🎯 Focus Mode: {weekday}",
+    "✨ {weekday} — Your Main-Character Era",
+    "🔥 Bring the Energy — It's {weekday}",
+    "💪 {weekday} — You've Got This",
+    "🌤️ Morning Boost — {weekday}",
+    "📈 Stack Small Wins — {weekday}",
+    "🎬 Plot Twist: It's {weekday}",
+    "⌨️ {weekday}.exe Is Running Smoothly",
+    "☕ Coffee First, Then Conquer {weekday}",
+    "🧭 Navigate {weekday} Like a Pro",
+    "🌻 {weekday} — Fresh Start, Fresh Mindset",
+    "🏃 {weekday} Sprint — Pace Yourself",
+    "💡 Curiosity On — Happy {weekday}",
+    "🎉 {weekday} — Make Someone's Day",
+    "🌈 {weekday} Forecast: 100% Team Spirit",
+]
+
+SUBTITLE_TAGLINES: list[str] = [
+    "Small wins stack up",
+    "One focused hour beats a scattered day",
+    "Show up as your best self",
+    "Progress over perfection",
+    "Your vibe sets the tone",
+    "Make today worth remembering",
+    "Start strong, stay kind",
+    "You've got more in the tank than you think",
+    "Be the colleague you'd want on your team",
+    "Curiosity beats certainty",
+    "Done with care beats done in a rush",
+    "Protect your first 90 minutes",
+    "Adapt and advance",
+    "Listen for the quiet wins",
+    "Energy is a budget — spend wisely",
+]
+
+THEME_SUBTITLE_TAGLINES: dict[str, str] = {
+    "management": "Leadership · mindset · growth",
+    "article": "Read · reflect · apply",
+    "philosophy": "Pause · ponder · proceed",
+    "interaction": "Share · connect · belong",
+    "ai": "Fresh words for a fresh day",
+}
+
+
+def _pick_by_date(pool: list[str], today: date) -> str:
+    return pool[today.toordinal() % len(pool)]
+
+
+def build_card_title(today: date, source: str, weekday_name: str) -> str:
+    """Build Adaptive Card title — theme-specific or rotating static pool."""
+    if source in THEME_TITLES:
+        return THEME_TITLES[source]
+    template = _pick_by_date(STATIC_TITLES, today)
+    return template.replace("{weekday}", weekday_name)
+
+
+def build_card_subtitle(today: date, source: str, weekday_name: str) -> str:
+    """Date line with an optional short tagline."""
+    date_str = today.strftime("%B %d, %Y")
+    if source in THEME_SUBTITLE_TAGLINES:
+        tagline = THEME_SUBTITLE_TAGLINES[source]
+    else:
+        tagline = _pick_by_date(SUBTITLE_TAGLINES, today)
+    return f"{weekday_name}, {date_str} · {tagline}"
