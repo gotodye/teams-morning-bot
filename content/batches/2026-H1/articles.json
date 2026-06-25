@@ -124,5 +124,68 @@
     "url": "https://brenebrown.com/hubs/dare-to-lead/",
     "topic": "brave leadership and trust",
     "fallback_summary": "Brown defines daring leadership as rumbling with vulnerability, living into values, braving trust, and learning to rise after failure. Courageous leaders create cultures where people feel safe to innovate."
+  },
+  {
+    "title": "How Will You Measure Your Life?",
+    "source": "Clayton M. Christensen / Harvard Business Review",
+    "url": "https://hbr.org/2010/07/how-will-you-measure-your-life",
+    "topic": "aligning career choices with what matters most",
+    "fallback_summary": "Christensen applies management theory to life: allocate your resources — time, talent, energy — to purposes you will not regret. Integrity and relationships often matter more than short-term career optimization."
+  },
+  {
+    "title": "Emotional Agility",
+    "source": "Susan David / Harvard Business Review",
+    "url": "https://hbr.org/2013/11/emotional-agility",
+    "topic": "navigating emotions with flexibility",
+    "fallback_summary": "David argues that rigid positivity or suppression backfires. Emotional agility means noticing feelings without being ruled by them — then choosing values-aligned actions that support resilience and better decisions at work."
+  },
+  {
+    "title": "The Power of Small Wins",
+    "source": "Teresa Amabile / Harvard Business Review",
+    "url": "https://hbr.org/2011/05/the-power-of-small-wins",
+    "topic": "motivation through meaningful progress",
+    "fallback_summary": "Amabile's diary research shows inner work life improves when people make progress on meaningful work — even small wins. Managers who clear obstacles and celebrate forward motion unlock sustained motivation."
+  },
+  {
+    "title": "Radical Candor",
+    "source": "Kim Scott",
+    "url": "https://www.radicalcandor.com/our-approach/",
+    "topic": "caring personally while challenging directly",
+    "fallback_summary": "Scott's framework urges leaders to care personally and challenge directly — honest feedback rooted in respect. Avoiding hard conversations creates ruinous empathy; candor without care feels obnoxious. Balance builds trust and results."
+  },
+  {
+    "title": "Getting Things Done",
+    "source": "David Allen",
+    "url": "https://gettingthingsdone.com/what-is-gtd/",
+    "topic": "stress-free productivity and clear thinking",
+    "fallback_summary": "Allen's GTD method captures commitments outside your head, clarifies next actions, and reviews regularly. A trusted system reduces mental clutter so you can focus on meaningful work instead of background anxiety."
+  },
+  {
+    "title": "Flow: The Psychology of Optimal Experience",
+    "source": "Mihaly Csikszentmihalyi",
+    "url": "https://www.penguinrandomhouse.com/books/313183/flow-by-mihaly-csikszentmihalyi/",
+    "topic": "deep engagement and satisfaction in work",
+    "fallback_summary": "Csikszentmihalyi describes flow as complete absorption when challenge matches skill. Designing work for clear goals, immediate feedback, and focused attention increases both performance and genuine satisfaction."
+  },
+  {
+    "title": "Give and Take",
+    "source": "Adam Grant",
+    "url": "https://www.adamgrant.net/give-and-take",
+    "topic": "generosity, reciprocity, and success",
+    "fallback_summary": "Grant shows that givers, takers, and matchers behave differently at work. Smart givers — generous but with boundaries — often build the strongest networks, reputations, and long-term career success."
+  },
+  {
+    "title": "Leaders Eat Last",
+    "source": "Simon Sinek",
+    "url": "https://simonsinek.com/books/leaders-eat-last/",
+    "topic": "trust, safety, and servant leadership",
+    "fallback_summary": "Sinek explains that great leaders create a Circle of Safety — people feel protected from internal politics so they can cooperate and take risks. When leaders put the team first, trust and performance compound."
+  },
+  {
+    "title": "Drive: The Surprising Truth About What Motivates Us",
+    "source": "Daniel H. Pink",
+    "url": "https://www.danpink.com/books/drive/",
+    "topic": "autonomy, mastery, and purpose at work",
+    "fallback_summary": "Pink argues that carrots and sticks work poorly for creative knowledge work. Lasting motivation comes from autonomy over your work, the pursuit of mastery, and connecting daily tasks to a larger purpose."
   }
 ]
