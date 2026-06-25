@@ -180,8 +180,7 @@ INTERACTIONS: list[Interaction] = [
 
 
 def pick_interaction(today: date) -> Interaction:
-    """Pick one interaction prompt per biweek (deterministic rotation)."""
-    year, week, _ = today.isocalendar()
-    biweek = (week - 1) // 2
-    index = (year * 100 + biweek) % len(INTERACTIONS)
-    return INTERACTIONS[index]
+    """Pick one interaction — half-year batch, sequential on interaction days."""
+    from content_batch import pick_interaction_entry
+
+    return pick_interaction_entry(today)  # type: ignore[return-value]

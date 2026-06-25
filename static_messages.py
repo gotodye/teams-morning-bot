@@ -422,12 +422,7 @@ def _pool_for(today: date) -> list[StaticMessage]:
 
 
 def pick_static_message(today: date) -> StaticPick:
-    """Pick a static B+ message by weekday pool and date (deterministic rotation)."""
-    pool = _pool_for(today)
-    entry = pool[today.toordinal() % len(pool)]
-    return StaticPick(
-        text=entry["text"],
-        static_format=entry["format"],
-        mood=entry.get("mood"),
-        image_query=entry.get("image_query"),
-    )
+    """Pick static B+ message via half-year content batch."""
+    from content_batch import pick_static
+
+    return pick_static(today)

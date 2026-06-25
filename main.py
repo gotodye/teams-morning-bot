@@ -8,7 +8,6 @@ import hashlib
 import json
 import logging
 import os
-import random
 import sys
 from datetime import date, datetime, timedelta
 from zoneinfo import ZoneInfo
@@ -19,13 +18,17 @@ from dotenv import load_dotenv
 
 from articles import pick_article
 from interactions import pick_interaction
+from content_batch import (
+    half_year_key,
+    pick_management as batch_pick_management,
+    pick_philosophy as batch_pick_philosophy,
+    pick_static as batch_pick_static,
+)
 from messages import (
-    MANAGEMENT_QUOTES,
-    PHILOSOPHY_QUOTES,
     build_card_subtitle,
     build_card_title,
 )
-from static_messages import StaticPick, pick_static_message
+from static_messages import StaticPick
 from image_search import find_theme_image
 from news import find_major_news
 
@@ -293,26 +296,40 @@ def is_philosophy_quote_day(today: date) -> bool:
     return philosophy_day == today
 
 
-def _pick_from_pool(pool: list[str], today: date) -> str:
-    strategy = os.environ.get("MESSAGE_STRATEGY", "random").lower()
-    if strategy == "random":
-        return random.choice(pool)
-    return pool[today.toordinal() % len(pool)]
+def resolve_message_source(today: date) -> str | None:
+    """
+    Return the scheduled message source for a calendar day.
+    Mirrors build_message() priority without generating text.
+    Returns None for non-workdays.
+    """
+    if not is_workday(today):
+        return None
+    if is_management_quote_day(today):
+        return "management"
+    if is_article_insight_day(today):
+        return "article"
+    if is_philosophy_quote_day(today):
+        return "philosophy"
+    if is_interaction_day(today):
+        return "interaction"
+    if should_use_ai(today):
+        return "ai"
+    return "static"
 
 
 def pick_management_quote(today: date) -> str:
-    """Weekly management wisdom from renowned leaders and authors."""
-    return _pick_from_pool(MANAGEMENT_QUOTES, today)
+    """Weekly management wisdom — half-year batch, sequential, no repeats within period."""
+    return batch_pick_management(today)
 
 
 def pick_philosophy_quote(today: date) -> str:
-    """Biweekly philosophy wisdom from renowned philosophers."""
-    return _pick_from_pool(PHILOSOPHY_QUOTES, today)
+    """Biweekly philosophy — half-year batch, sequential."""
+    return batch_pick_philosophy(today)
 
 
 def pick_static_message_text(today: date) -> StaticPick:
-    """Static B+ message with image hints for themed photos."""
-    return pick_static_message(today)
+    """Static B+ — half-year batch, sequential."""
+    return batch_pick_static(today)
 
 
 def _static_fallback(today: date) -> tuple[str, str, dict[str, str]]:
@@ -362,7 +379,7 @@ def build_message(today: date) -> tuple[str, str, dict[str, str]]:
             logger.warning("AI failed — falling back to static message", exc_info=True)
             return _static_fallback(today)
 
-    logger.info("Static creative message (B+)")
+    logger.info("Static creative message (B+) [%s]", half_year_key(today))
     return _static_fallback(today)
 
 
@@ -858,6 +875,18 @@ def run_validate_only(today: date) -> int:
     logger.info("Message source: %s", source)
     if static_format:
         logger.info("Static format: %s", static_format)
+    try:
+        from content_batch import half_year_key, occurrence_in_half_year
+
+        logger.info("Content batch: %s", half_year_key(today))
+        if source in ("management", "philosophy", "article", "interaction", "static"):
+            logger.info(
+                "Half-year %s occurrence: %d",
+                source,
+                occurrence_in_half_year(today, source),
+            )
+    except Exception:
+        pass
     logger.info("Webhook format: %s", webhook_format)
     logger.info("Message preview: %s", _preview_text(message))
     logger.info("Image: %s", image_url or "(none)")

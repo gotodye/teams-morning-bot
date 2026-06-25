@@ -1,0 +1,302 @@
+[
+  {
+    "text": "Your brain before coffee is like legacy code — it works, but nobody should touch it before 9 AM. ☕",
+    "format": "humor",
+    "mood": "humor"
+  },
+  {
+    "text": "Monday has a PR problem. Good thing we're here to rewrite the narrative. 📝",
+    "format": "humor",
+    "mood": "humor"
+  },
+  {
+    "text": "Why do programmers prefer dark mode? Because light attracts bugs. 🐛",
+    "format": "humor",
+    "mood": "humor"
+  },
+  {
+    "text": "You're not behind — you're just loading. Great things take a moment to initialize. ⚡",
+    "format": "warm",
+    "mood": "warm"
+  },
+  {
+    "text": "New week, clean branch. Commit something you'll be proud of by Friday. 🌅",
+    "format": "warm",
+    "mood": "warm"
+  },
+  {
+    "text": "Honey never spoils — archaeologists found 3,000-year-old honey still edible. Patience has its rewards. 🍯",
+    "format": "fact",
+    "mood": "nature"
+  },
+  {
+    "text": "Octopuses have three hearts. You only need one — fill it with purpose today. 🐙",
+    "format": "fact",
+    "mood": "cute"
+  },
+  {
+    "text": "Santorini, Greece 🇬🇷\nWhite walls hold the morning light like unfinished poems.\nThe Aegean doesn't hurry — and for a moment, neither should we.",
+    "format": "travel",
+    "image_query": "Santorini Greece blue domes caldera sunrise landscape"
+  },
+  {
+    "text": "Ha Long Bay, Vietnam 🇻🇳\nLimestone islands drift on mist like thoughts surfacing slowly from deep water.\nSome mornings are meant to be looked at, not solved.",
+    "format": "travel",
+    "image_query": "Ha Long Bay Vietnam limestone karst mist scenic"
+  },
+  {
+    "text": "Arashiyama, Kyoto 🇯🇵\nBamboo shadows sway in a green half-light, as if time folded itself quieter here.\nCarry a little of that stillness into your first hour.",
+    "format": "travel",
+    "image_query": "Arashiyama bamboo grove Kyoto Japan morning light"
+  },
+  {
+    "text": "Meetings: where minutes are kept and hours are lost. Let's break the trend today. ⏰",
+    "format": "humor",
+    "mood": "humor"
+  },
+  {
+    "text": "'It's just a small change' — famous last words before a two-week sprint. 😅",
+    "format": "humor",
+    "mood": "humor"
+  },
+  {
+    "text": "Ctrl+Z works in code, not in meetings. Think before you speak. ⌨️",
+    "format": "humor",
+    "mood": "humor"
+  },
+  {
+    "text": "Monday didn't break you. That's not luck — that's capability. Keep rolling. 💪",
+    "format": "warm",
+    "mood": "warm"
+  },
+  {
+    "text": "Treat your energy like a budget — spend it on what actually moves the needle. 💡",
+    "format": "warm",
+    "mood": "warm"
+  },
+  {
+    "text": "Small wins compound like interest. Stack one before lunch. 📈",
+    "format": "warm",
+    "mood": "warm"
+  },
+  {
+    "text": "Bananas are berries, but strawberries aren't. Nature loves plot twists — so should we. 🍌",
+    "format": "fact",
+    "mood": "nature"
+  },
+  {
+    "text": "Hummingbirds are the only birds that can fly backward. Sometimes reversing course is progress. 🐦",
+    "format": "fact",
+    "mood": "nature"
+  },
+  {
+    "text": "Lake Louise, Canada 🇨🇦\nTurquoise water mirrors pine and snow like the earth is dreaming in color.\nLet a little of that clarity settle in before the inbox opens.",
+    "format": "travel",
+    "image_query": "Lake Louise Banff Canada turquoise lake mountains scenic"
+  },
+  {
+    "text": "Machu Picchu, Peru 🇵🇪\nClouds wander through ancient stone as if memory itself were breathing.\nSome heights are reached slowly — and beautifully.",
+    "format": "travel",
+    "image_query": "Machu Picchu Peru clouds ancient ruins landscape"
+  },
+  {
+    "text": "The coffee isn't ready until the first 'quick sync' of the day is survived. ☕",
+    "format": "humor",
+    "mood": "coffee"
+  },
+  {
+    "text": "Debugging is like being a detective in a crime movie where you're also the murderer. 🔍",
+    "format": "humor",
+    "mood": "humor"
+  },
+  {
+    "text": "My code doesn't have bugs — it has undocumented features. (Kidding. Mostly.) 🙃",
+    "format": "humor",
+    "mood": "humor"
+  },
+  {
+    "text": "Halfway up the mountain — the view from here is already worth it. Keep climbing. ⛰️",
+    "format": "warm",
+    "mood": "warm"
+  },
+  {
+    "text": "Done is better than perfect — but 'done with care' is better than both. ✨",
+    "format": "warm",
+    "mood": "warm"
+  },
+  {
+    "text": "Polar bears have black skin under white fur. Don't judge the surface — look deeper. 🐻‍❄️",
+    "format": "fact",
+    "mood": "nature"
+  },
+  {
+    "text": "Water is densest at 4°C — that's why ice floats. Stay flexible; rigidity sinks. 💧",
+    "format": "fact",
+    "mood": "nature"
+  },
+  {
+    "text": "Mount Fuji, Japan 🇯🇵\nSnow-capped peak above a sea of clouds — quiet, vast, and impossibly still.\nClarity often arrives before the noise of the day.",
+    "format": "travel",
+    "image_query": "Mount Fuji sunrise clouds Japan landscape scenic"
+  },
+  {
+    "text": "Blue Lagoon, Iceland 🇮🇸\nSteam rises from milky blue water under a pale Nordic sky — earth breathing softly.\nLet today begin a little softer than yesterday.",
+    "format": "travel",
+    "image_query": "Blue Lagoon Iceland geothermal steam scenic landscape"
+  },
+  {
+    "text": "Amalfi Coast, Italy 🇮🇹\nCliffs spill into cobalt water as if the coastline were painted in one confident stroke.\nBeauty, sometimes, is simply paying attention.",
+    "format": "travel",
+    "image_query": "Amalfi Coast Italy cliff sea colorful village scenic"
+  },
+  {
+    "text": "'Works on my machine' is not a deployment strategy. Let's ship with confidence. 🚀",
+    "format": "humor",
+    "mood": "humor"
+  },
+  {
+    "text": "Today's energy: 60% coffee, 30% curiosity, 10% controlled chaos. Blend well. ☕",
+    "format": "humor",
+    "mood": "coffee"
+  },
+  {
+    "text": "A clean desk is a sign of a cluttered hard drive. Organize priorities, not just icons. 🖥️",
+    "format": "humor",
+    "mood": "humor"
+  },
+  {
+    "text": "The weekend is waving from the horizon. Finish strong, not rushed. 🌅",
+    "format": "warm",
+    "mood": "warm"
+  },
+  {
+    "text": "Protect your first 90 minutes — they're the quiet architects of the whole day. 🎯",
+    "format": "warm",
+    "mood": "warm"
+  },
+  {
+    "text": "Sunlight takes 8 minutes 20 seconds to reach Earth. You're always seeing the past — but building the future. ☀️",
+    "format": "fact",
+    "mood": "warm"
+  },
+  {
+    "text": "The Eiffel Tower grows ~15 cm taller in summer. Expand your comfort zone today. 🗼",
+    "format": "fact",
+    "mood": "nature"
+  },
+  {
+    "text": "Geirangerfjord, Norway 🇳🇴\nWaterfalls thread down green cliffs into still fjord water — nature in no hurry at all.\nBorrow that unhurried grace for the hours ahead.",
+    "format": "travel",
+    "image_query": "Geirangerfjord Norway fjord waterfall scenic landscape"
+  },
+  {
+    "text": "Cappadocia, Turkey 🇹🇷\nBalloons drift over honey-colored valleys at dawn, as if the sky were gently exhaling.\nLift your mood before the day asks you to.",
+    "format": "travel",
+    "image_query": "Cappadocia Turkey hot air balloons sunrise valley"
+  },
+  {
+    "text": "Maldives 🇲🇻\nSand so pale and water so clear the horizon forgets where one ends and the other begins.\nFloat through this morning, even if only in your imagination.",
+    "format": "travel",
+    "image_query": "Maldives turquoise lagoon overwater villa scenic aerial"
+  },
+  {
+    "text": "Why did the developer go broke? Because they used up all their cache. Ba dum tss. 💸",
+    "format": "humor",
+    "mood": "humor"
+  },
+  {
+    "text": "Pro tip: the reply-all button is a group trust exercise. Choose wisely. 📧",
+    "format": "humor",
+    "mood": "humor"
+  },
+  {
+    "text": "Stand-up meetings are cardio for your career. Show up, speak up, level up. 🏃",
+    "format": "humor",
+    "mood": "humor"
+  },
+  {
+    "text": "TGIF — you earned this week. Close loops, celebrate wins, recharge well. 🎉",
+    "format": "warm",
+    "mood": "warm"
+  },
+  {
+    "text": "You can't pour from an empty cup. Fill yours first — then serve the team. 🫖",
+    "format": "warm",
+    "mood": "warm"
+  },
+  {
+    "text": "Penguins give pebbles as gifts to show affection. Who on your team deserves a quiet thank-you today? 🐧",
+    "format": "fact",
+    "mood": "cute"
+  },
+  {
+    "text": "Cows have best friends and get stressed when separated. Check in on your work buddy before the week ends. 🐄",
+    "format": "fact",
+    "mood": "cute"
+  },
+  {
+    "text": "Santorini at dusk, Greece 🇬🇷\nGold light pools in narrow streets as the sea turns violet — evening arriving like a slow compliment.\nClose the week with something gentle.",
+    "format": "travel",
+    "image_query": "Santorini Greece sunset golden hour caldera scenic"
+  },
+  {
+    "text": "Milford Sound, New Zealand 🇳🇿\nRain-misted peaks rise from dark water like the world is whispering in lowercase.\nTake one quiet breath before the week lets go.",
+    "format": "travel",
+    "image_query": "Milford Sound New Zealand fjord mountains mist scenic"
+  },
+  {
+    "text": "Lavender fields, Provence 🇫🇷\nPurple rows breathe fragrance into warm air — summer holding still for one last look.\nEnd the week colorfully, even if only in your mind.",
+    "format": "travel",
+    "image_query": "Provence France lavender fields summer scenic landscape"
+  },
+  {
+    "text": "Plot twist: you're the main character today. Act accordingly. 🎬",
+    "format": "humor",
+    "mood": "humor"
+  },
+  {
+    "text": "If Plan A fails, remember: the alphabet has 25 more letters. Adapt and advance. 🔤",
+    "format": "humor",
+    "mood": "humor"
+  },
+  {
+    "text": "Be the colleague you'd want to sit next to in a three-hour meeting. 😄",
+    "format": "warm",
+    "mood": "warm"
+  },
+  {
+    "text": "Progress whispers before it shouts. Listen for the small wins today. 👂",
+    "format": "warm",
+    "mood": "warm"
+  },
+  {
+    "text": "You are about 1 cm taller in the morning. Stand tall in every sense today. 📏",
+    "format": "fact",
+    "mood": "nature"
+  },
+  {
+    "text": "A snail can sleep for three years. Friday mood? We feel you. But we're awake now. 😄",
+    "format": "fact",
+    "mood": "cute"
+  },
+  {
+    "text": "Petra, Jordan 🇯🇴\nRose-red stone glows in narrow canyon light — a city half memory, half miracle.\nWonder is never wasted on a workday morning.",
+    "format": "travel",
+    "image_query": "Petra Jordan Treasury rose red canyon scenic"
+  },
+  {
+    "text": "Grand Canyon, USA 🇺🇸\nLayers of time exposed in copper and rust — the earth telling stories without words.\nStep into today knowing some depths are worth admiring.",
+    "format": "travel",
+    "image_query": "Grand Canyon USA sunrise scenic landscape aerial"
+  },
+  {
+    "text": "Bora Bora, French Polynesia 🇵🇫\nLagoon blue so vivid it feels borrowed from a dream you almost remember.\nLet your shoulders drop — the weekend is nearer than it looks.",
+    "format": "travel",
+    "image_query": "Bora Bora turquoise lagoon overwater bungalow scenic"
+  },
+  {
+    "text": "Serengeti at dawn, Tanzania 🇹🇿\nGolden grass holds the first light as the plain wakes in slow, ancient rhythm.\nBegin today with that same unhurried courage.",
+    "format": "travel",
+    "image_query": "Serengeti Tanzania savanna sunrise golden landscape wildlife"
+  }
+]

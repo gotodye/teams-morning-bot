@@ -217,7 +217,7 @@ ARTICLES: list[Article] = [
 
 
 def pick_article(today: date) -> Article:
-    """Pick one article deterministically per calendar week."""
-    year, week, _ = today.isocalendar()
-    index = (year * 100 + week) % len(ARTICLES)
-    return ARTICLES[index]
+    """Pick one article — half-year batch, sequential on article days."""
+    from content_batch import pick_article_entry
+
+    return pick_article_entry(today)  # type: ignore[return-value]
