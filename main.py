@@ -31,6 +31,7 @@ from messages import (
 from static_messages import StaticPick
 from image_search import find_theme_image
 from news import find_major_news
+from telegram_delivery import send_to_telegram, telegram_configured
 
 load_dotenv()
 
@@ -783,6 +784,15 @@ def _audit_configuration(today: date) -> tuple[list[str], list[str]]:
             "workday — a normal run would skip without sending"
         )
 
+    tg_token = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
+    tg_chat = os.environ.get("TELEGRAM_CHAT_ID", "").strip()
+    if tg_token and not tg_chat:
+        errors.append("TELEGRAM_BOT_TOKEN is set but TELEGRAM_CHAT_ID is missing")
+    elif tg_chat and not tg_token:
+        errors.append("TELEGRAM_CHAT_ID is set but TELEGRAM_BOT_TOKEN is missing")
+    elif telegram_configured():
+        logger.info("Telegram delivery enabled for chat %s", tg_chat)
+
     return errors, warnings
 
 
@@ -905,6 +915,8 @@ def run_validate_only(today: date) -> int:
         return 1
 
     logger.info("Validation passed (%d warning(s)) — no message was sent", len(warnings))
+    if telegram_configured():
+        logger.info("Telegram is configured — would also send to chat %s", os.environ.get("TELEGRAM_CHAT_ID", ""))
     return 0
 
 
@@ -936,6 +948,18 @@ def run_for_date(today: date) -> int:
 
     logger.info("Message (%s): %s", source, message)
     send_to_teams(message, today, source, image_url, static_format=static_format)
+
+    if telegram_configured():
+        weekday_name = WEEKDAY_NAMES[today.weekday()]
+        send_to_telegram(
+            message,
+            today,
+            source,
+            image_url,
+            weekday_name=weekday_name,
+            static_format=static_format,
+        )
+
     return 0
 
 

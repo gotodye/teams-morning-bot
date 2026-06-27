@@ -1,0 +1,73 @@
+name: Refresh content batch
+
+# Phase 2: generate a new half-year content pool before each period starts.
+# Jun 15 → creates H2 batch for Jul–Dec; Dec 15 → creates next year's H1.
+on:
+  schedule:
+    - cron: "0 2 15 6,12 *"
+  workflow_dispatch:
+    inputs:
+      period:
+        description: "Half-year period (e.g. 2026-H2). Empty = infer from date."
+        required: false
+        default: ""
+      use_llm:
+        description: "Fill shortfalls with LLM if seed is below targets"
+        required: false
+        default: false
+        type: boolean
+      force:
+        description: "Overwrite existing batch directory"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+jobs:
+  refresh-batch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Generate half-year batch
+        env:
+          AI_PROVIDER: ${{ vars.AI_PROVIDER || 'openai' }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'gpt-4o-mini' }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: ${{ vars.GEMINI_MODEL || 'gemini-2.0-flash' }}
+        run: |
+          ARGS=""
+          if [ -n "${{ github.event.inputs.period }}" ]; then
+            ARGS="$ARGS ${{ github.event.inputs.period }}"
+          fi
+          if [ "${{ github.event.inputs.use_llm }}" = "true" ]; then
+            ARGS="$ARGS --use-llm"
+          fi
+          if [ "${{ github.event.inputs.force }}" = "true" ]; then
+            ARGS="$ARGS --force"
+          fi
+          python scripts/generate_half_year_batch.py $ARGS
+
+      - name: Commit and push batch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet; then
+            echo "No batch changes to commit"
+            exit 0
+          fi
+          git add content/batches/
+          git commit -m "chore: refresh half-year content batch"
+          git push

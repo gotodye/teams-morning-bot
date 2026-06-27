@@ -7,6 +7,7 @@
 ## 功能特色
 
 - 透過 Teams Incoming Webhook（Power Automate）發送訊息
+- **可選同步推播到 Telegram 群組**（同一則晨間內容，設定 Bot Token + Chat ID 即可）
 - 自動排除週末與台灣國定假日（使用 `holidays` 套件）
 - **六種主題輪替**（預設 `MESSAGE_MODE=mixed`）：管理金句、文章摘要、哲學金句、頻道互動、AI 問候、靜態創意問候（詳見下方「主題日曆」）
 - **重大新聞附加**：台灣／香港／越南／印尼重大事件達門檻時，附加在當日主題訊息後方
@@ -18,7 +19,8 @@
 
 ```
 teams-morning-bot/
-├── main.py                              # 主程式：主題日曆、Teams 發送
+├── main.py                              # 主程式：主題日曆、Teams / Telegram 發送
+├── telegram_delivery.py                 # Telegram Bot API 發送
 ├── messages.py                          # 靜態問候、管理金句、哲學金句資料庫
 ├── articles.py                          # 每週文章摘要題庫
 ├── interactions.py                      # 每兩週頻道互動題庫
@@ -110,6 +112,16 @@ cd teams-morning-bot
 | Secret 名稱 | 說明 | 必填 |
 |---|---|---|
 | `TEAMS_WEBHOOK_URL` | Teams Incoming Webhook URL | ✅ 必填 |
+| `TELEGRAM_BOT_TOKEN` | Telegram Bot Token（[@BotFather](https://t.me/BotFather) 取得） | 選填（要同步發 TG 時必填） |
+
+#### Secrets（Telegram 同步推播，選填）
+
+| Secret / Variable | 說明 |
+|---|---|
+| `TELEGRAM_CHAT_ID` | 目標群組 Chat ID（Secret 或 Variable 皆可） |
+| `ENABLE_TELEGRAM` | `true` / `false`（預設 `true`；有 Token + Chat ID 時才會發送） |
+
+> **取得 Chat ID**：把 Bot 加入群組後，在群組發一則訊息，再執行 `python scripts/get_telegram_chat_id.py`（需在本機 `.env` 設定 `TELEGRAM_BOT_TOKEN`）。
 
 #### Secrets（混合模式建議設定）
 
