@@ -33,7 +33,7 @@ jobs:
           ENABLE_MAJOR_NEWS: "false"
           TEAMS_WEBHOOK_FORMAT: ${{ vars.TEAMS_WEBHOOK_FORMAT || 'auto' }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ vars.TELEGRAM_CHAT_ID || secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_CHAT_ID: ${{ vars.TELEGRAM_CHAT_ID }}
           ENABLE_TELEGRAM: ${{ vars.ENABLE_TELEGRAM || 'true' }}
           FORCE_MESSAGE_TYPE: ai
           SKIP_WORKDAY_CHECK: "true"

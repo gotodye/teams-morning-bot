@@ -31,7 +31,7 @@ from messages import (
 from static_messages import StaticPick
 from image_search import find_theme_image
 from news import find_major_news
-from telegram_delivery import send_to_telegram, telegram_configured
+from telegram_delivery import send_to_telegram, telegram_configured, telegram_status_line
 
 load_dotenv()
 
@@ -947,6 +947,7 @@ def run_for_date(today: date) -> int:
         logger.info("No image found — text only")
 
     logger.info("Message (%s): %s", source, message)
+    logger.info(telegram_status_line())
     send_to_teams(message, today, source, image_url, static_format=static_format)
 
     if telegram_configured():
@@ -959,6 +960,8 @@ def run_for_date(today: date) -> int:
             weekday_name=weekday_name,
             static_format=static_format,
         )
+    else:
+        logger.warning(telegram_status_line())
 
     return 0
 

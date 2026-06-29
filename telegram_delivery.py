@@ -92,13 +92,102 @@ def _split_text(text: str, limit: int) -> list[str]:
     return chunks
 
 
-def _api_post(token: str, method: str, payload: dict) -> None:
+def _api_post(token: str, method: str, payload: dict) -> dict:
     url = TELEGRAM_API.format(token=token, method=method)
     response = requests.post(url, json=payload, timeout=30)
-    response.raise_for_status()
     data = response.json()
-    if not data.get("ok"):
-        raise RuntimeError(f"Telegram API {method} failed: {data}")
+    if not response.ok or not data.get("ok"):
+        description = data.get("description", response.text)
+        raise RuntimeError(f"Telegram API {method} failed: {description}")
+    return data
+
+
+def _send_message(
+    token: str,
+    chat_id: str,
+    text: str,
+    *,
+    parse_mode: str | None = "HTML",
+) -> None:
+    payload: dict = {"chat_id": chat_id, "text": text}
+    if parse_mode:
+        payload["parse_mode"] = parse_mode
+    try:
+        _api_post(token, "sendMessage", payload)
+    except RuntimeError as exc:
+        if parse_mode and "parse" in str(exc).lower():
+            logger.warning("Telegram HTML failed — retrying as plain text")
+            _api_post(token, "sendMessage", {"chat_id": chat_id, "text": text})
+            return
+        raise
+
+
+def _send_photo_bytes(
+    token: str,
+    chat_id: str,
+    image_bytes: bytes,
+    *,
+    caption: str | None = None,
+) -> None:
+    url = TELEGRAM_API.format(token=token, method="sendPhoto")
+    data: dict = {"chat_id": chat_id}
+    if caption:
+        data["caption"] = caption[:CAPTION_LIMIT]
+        data["parse_mode"] = "HTML"
+    response = requests.post(
+        url,
+        data=data,
+        files={"photo": ("theme.jpg", image_bytes)},
+        timeout=60,
+    )
+    body = response.json()
+    if not response.ok or not body.get("ok"):
+        raise RuntimeError(
+            f"Telegram API sendPhoto (upload) failed: {body.get('description', response.text)}"
+        )
+
+
+def _send_photo_url(
+    token: str,
+    chat_id: str,
+    image_url: str,
+    *,
+    caption: str | None = None,
+) -> None:
+    payload: dict = {"chat_id": chat_id, "photo": image_url}
+    if caption:
+        payload["caption"] = caption[:CAPTION_LIMIT]
+        payload["parse_mode"] = "HTML"
+    _api_post(token, "sendPhoto", payload)
+
+
+def _send_photo_with_fallback(
+    token: str,
+    chat_id: str,
+    image_url: str,
+) -> None:
+    """Telegram often cannot fetch Unsplash/Pexels URLs — download and upload instead."""
+    try:
+        _send_photo_url(token, chat_id, image_url)
+        logger.info("Telegram photo sent via URL")
+        return
+    except RuntimeError as exc:
+        logger.warning("Telegram sendPhoto URL failed: %s", exc)
+
+    try:
+        response = requests.get(
+            image_url,
+            timeout=30,
+            headers={"User-Agent": "teams-morning-bot/1.0"},
+        )
+        response.raise_for_status()
+        content_type = response.headers.get("Content-Type", "")
+        if not content_type.startswith("image/"):
+            raise RuntimeError(f"Unexpected content type: {content_type or 'unknown'}")
+        _send_photo_bytes(token, chat_id, response.content)
+        logger.info("Telegram photo sent via upload")
+    except Exception as exc:
+        logger.warning("Telegram photo skipped after all attempts: %s", exc)
 
 
 def send_to_telegram(
@@ -126,51 +215,26 @@ def send_to_telegram(
         static_format=static_format,
     )
 
-    if image_url:
-        if len(text) <= CAPTION_LIMIT:
-            _api_post(
-                token,
-                "sendPhoto",
-                {
-                    "chat_id": chat_id,
-                    "photo": image_url,
-                    "caption": text,
-                    "parse_mode": "HTML",
-                },
-            )
-            logger.info("Message with image sent to Telegram!")
-            return
-
-        title_only = _build_header_html(
-            today,
-            source,
-            weekday_name=weekday_name,
-            static_format=static_format,
-        )
-        _api_post(
-            token,
-            "sendPhoto",
-            {
-                "chat_id": chat_id,
-                "photo": image_url,
-                "caption": title_only[:CAPTION_LIMIT],
-                "parse_mode": "HTML",
-            },
-        )
-        body_html = _markdown_to_html(message)
-        for chunk in _split_text(body_html, MESSAGE_LIMIT):
-            _api_post(
-                token,
-                "sendMessage",
-                {"chat_id": chat_id, "text": chunk, "parse_mode": "HTML"},
-            )
-        logger.info("Message with image (split) sent to Telegram!")
-        return
-
+    logger.info("Telegram: sending text to chat_id=%s (source=%s)", chat_id, source)
     for chunk in _split_text(text, MESSAGE_LIMIT):
-        _api_post(
-            token,
-            "sendMessage",
-            {"chat_id": chat_id, "text": chunk, "parse_mode": "HTML"},
-        )
+        _send_message(token, chat_id, chunk)
+
+    if image_url:
+        _send_photo_with_fallback(token, chat_id, image_url)
+
     logger.info("Message sent to Telegram!")
+
+
+def telegram_status_line() -> str:
+    """One-line status for logs / CI diagnostics."""
+    if os.environ.get("ENABLE_TELEGRAM", "true").lower() == "false":
+        return "Telegram disabled (ENABLE_TELEGRAM=false)"
+    token = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
+    chat_id = os.environ.get("TELEGRAM_CHAT_ID", "").strip()
+    if not token and not chat_id:
+        return "Telegram skipped (TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID not set)"
+    if not token:
+        return "Telegram misconfigured (TELEGRAM_BOT_TOKEN missing)"
+    if not chat_id:
+        return "Telegram misconfigured (TELEGRAM_CHAT_ID missing)"
+    return f"Telegram enabled (chat_id={chat_id})"
