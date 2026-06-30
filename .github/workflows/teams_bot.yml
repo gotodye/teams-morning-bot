@@ -42,7 +42,7 @@ jobs:
       - name: Check Telegram configuration
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ vars.TELEGRAM_CHAT_ID }}
+          TELEGRAM_CHAT_ID: ${{ vars.TELEGRAM_CHAT_ID || secrets.TELEGRAM_CHAT_ID }}
           ENABLE_TELEGRAM: ${{ vars.ENABLE_TELEGRAM || 'true' }}
         run: python scripts/verify_telegram.py
 
@@ -65,7 +65,7 @@ jobs:
           MAJOR_NEWS_THRESHOLD: ${{ vars.MAJOR_NEWS_THRESHOLD || '70' }}
           TEAMS_WEBHOOK_FORMAT: ${{ vars.TEAMS_WEBHOOK_FORMAT || 'auto' }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ vars.TELEGRAM_CHAT_ID }}
+          TELEGRAM_CHAT_ID: ${{ vars.TELEGRAM_CHAT_ID || secrets.TELEGRAM_CHAT_ID }}
           ENABLE_TELEGRAM: ${{ vars.ENABLE_TELEGRAM || 'true' }}
           MANAGEMENT_QUOTE_WEEKDAY: ${{ vars.MANAGEMENT_QUOTE_WEEKDAY || '2' }}
           INTERACTION_FORMS_URL: ${{ vars.INTERACTION_FORMS_URL || '' }}
