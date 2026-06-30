@@ -79,6 +79,7 @@ if ($gh) {
     if ($sync -eq 'y' -or $sync -eq 'Y') {
         $token | gh secret set TELEGRAM_BOT_TOKEN -R gotodye/teams-morning-bot
         gh variable set TELEGRAM_CHAT_ID --body $chatId -R gotodye/teams-morning-bot
+        gh variable set ENABLE_TELEGRAM --body "true" -R gotodye/teams-morning-bot
         Write-Host "[OK] GitHub TELEGRAM_BOT_TOKEN (secret) + TELEGRAM_CHAT_ID (variable)" -ForegroundColor Green
     }
 } else {

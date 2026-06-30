@@ -114,6 +114,34 @@ cd teams-morning-bot
 | `TEAMS_WEBHOOK_URL` | Teams Incoming Webhook URL | ✅ 必填 |
 | `TELEGRAM_BOT_TOKEN` | Telegram Bot Token（[@BotFather](https://t.me/BotFather) 取得） | 選填（要同步發 TG 時必填） |
 
+#### Telegram 同步推播（方案 A）
+
+若要同時推播到 Telegram 群組，請完成以下步驟：
+
+1. 在 [@BotFather](https://t.me/BotFather) 建立 Bot，取得 **Token**
+2. 把 Bot **加入目標群組**，並在群組內發一則訊息
+3. 在本機執行（會寫入 `.env` 並可同步到 GitHub）：
+
+```bash
+# Linux / macOS / Git Bash
+TELEGRAM_BOT_TOKEN='你的Token' SYNC_GITHUB=y ./scripts/set_telegram_env.sh
+
+# Windows PowerShell
+.\scripts\set_telegram_env.ps1
+```
+
+或手動設定 GitHub：
+
+| 位置 | 名稱 | 值 |
+|---|---|---|
+| **Secrets** | `TELEGRAM_BOT_TOKEN` | BotFather 給的 Token |
+| **Variables** | `TELEGRAM_CHAT_ID` | 群組 Chat ID（預設 `-1002236690168`） |
+| **Variables** | `ENABLE_TELEGRAM` | `true` |
+
+4. 到 **Actions** → **Teams Morning Bot** → **Run workflow**，勾選 `skip_workday_check` 測試
+
+> CI 會在 Token + Chat ID 都設定時，自動驗證 Bot 與群組；未設定時 Teams 推播不受影響。
+
 #### Secrets（Telegram 同步推播，選填）
 
 | Secret / Variable | 說明 |
