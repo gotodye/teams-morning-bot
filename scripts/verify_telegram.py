@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID from .env."""
+"""Verify TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID when Telegram delivery is enabled."""
 
 from __future__ import annotations
 
@@ -14,13 +14,32 @@ ROOT = Path(__file__).resolve().parents[1]
 load_dotenv(ROOT / ".env")
 
 
+def _telegram_enabled() -> bool:
+    return os.environ.get("ENABLE_TELEGRAM", "true").lower() != "false"
+
+
+def _telegram_configured() -> bool:
+    token = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
+    chat_id = os.environ.get("TELEGRAM_CHAT_ID", "").strip()
+    return bool(token and chat_id)
+
+
 def main() -> int:
+    if not _telegram_enabled():
+        print("[SKIP] ENABLE_TELEGRAM=false — Telegram verification skipped")
+        return 0
+
     token = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
     chat_id = os.environ.get("TELEGRAM_CHAT_ID", "").strip()
 
-    if not token:
-        print("[FAIL] TELEGRAM_BOT_TOKEN 未設定")
-        return 1
+    if not token and not chat_id:
+        print("[SKIP] Telegram not configured — Teams-only mode")
+        return 0
+
+    if not token or not chat_id:
+        missing = "TELEGRAM_BOT_TOKEN" if not token else "TELEGRAM_CHAT_ID"
+        print(f"[WARN] {missing} 未設定 — Telegram 將略過，Teams 推播不受影響")
+        return 0
 
     response = requests.get(
         f"https://api.telegram.org/bot{token}/getMe",
@@ -34,10 +53,6 @@ def main() -> int:
     user = data["result"]
     print(f"[OK] Bot: @{user.get('username', '?')} ({user.get('first_name', '')})")
 
-    if not chat_id:
-        print("[WARN] TELEGRAM_CHAT_ID 未設定")
-        return 0
-
     chat_resp = requests.get(
         f"https://api.telegram.org/bot{token}/getChat",
         params={"chat_id": chat_id},
@@ -50,7 +65,7 @@ def main() -> int:
         print(f"[OK] Chat: {title} (id={chat.get('id')})")
         return 0
 
-    print("[WARN] getChat:", chat_data.get("description", chat_data))
+    print("[FAIL] getChat:", chat_data.get("description", chat_data))
     print("       請確認 Bot 已加入群組，且 Chat ID 正確")
     return 1
 
