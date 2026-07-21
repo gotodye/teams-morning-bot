@@ -24,16 +24,23 @@
 
 ---
 
-## 方案 A：GitHub cron（目前已啟用）
+## 方案 A：GitHub cron（備援，已啟用）
 
-`teams_bot.yml` 已設定：
+`teams_bot.yml` 已設定 **備援排程**（與 cron-job.org 並用）：
 
 ```yaml
 schedule:
-  - cron: "0 0 * * 1-5"   # UTC 00:00 = 台北 08:00
+  - cron: "0 1 * * 1-5"   # UTC 01:00 = 台北 09:00（週一至五）
 ```
 
-**優點**：推送後自動運作，不需本機、不需額外帳號。  
+| 觸發來源 | 時間（台北） | 角色 |
+|----------|-------------|------|
+| **cron-job.org** | 08:00 週一至五 | 主要（準時） |
+| **GitHub schedule** | 09:00 週一至五 | 備援（若 08:00 漏跑） |
+
+Workflow 使用 **Actions Cache** 記錄「今日已發送」：若 08:00 已成功發送，09:00 備援會自動跳過，避免同一天發兩則。
+
+**優點**：cron-job.org 漏跑時（例如 2026-07-20 週一），GitHub 備援仍可補發。  
 **缺點**：GitHub 免費版排程為「盡力而為」，實際可能 **10:00～13:00** 才跑（你之前遇過約 13:16）。
 
 ### 停用 Windows 本機排程（建議）
@@ -96,7 +103,9 @@ Unregister-ScheduledTask -TaskName "Teams Morning Bot Schedule" -Confirm:$false
 
 ### 3. 避免重複發送
 
-使用 cron-job.org 後，請從 `teams_bot.yml` **移除** `schedule:` 區塊（只保留 `workflow_dispatch`），否則同一天可能發兩次。
+cron-job.org 與 GitHub schedule **可同時啟用**。Workflow 會用 Cache 判斷當日是否已發送，不會因兩個排程各發一則。
+
+若仍出現重複，請確認沒有同時開 Windows 本機排程。
 
 ### 4. 測試
 
@@ -109,9 +118,28 @@ Unregister-ScheduledTask -TaskName "Teams Morning Bot Schedule" -Confirm:$false
 | 問題 | 處理 |
 |------|------|
 | 雲端有跑但 Teams 沒訊息 | 看 Actions log；常見為國定假日跳過或 Webhook Secret |
-| GitHub cron 太晚才跑 | 正常現象；改用 cron-job.org |
-| 同一天發兩則 | 同時開了 GitHub cron + cron-job 或 Windows 排程；只留一種 |
+| **某天完全沒發送** | 見下方「cron-job.org 檢查清單」；GitHub 09:00 備援應可補發 |
+| GitHub cron 太晚才跑 | 正常現象；主要仍靠 cron-job.org 08:00 |
+| 同一天發兩則 | 同時開了 Windows 本機排程；或 Cache 未寫入（看 log 是否有 `already sent today`） |
 | cron-job 401 | Token 權限需 Actions: Write |
+
+### cron-job.org 檢查清單（某天漏跑時）
+
+以 **2026-07-20（週一）漏跑** 為例：GitHub Actions 當天 **0 筆 run**，代表 cron-job.org **未成功觸發** workflow。
+
+1. 登入 https://console.cron-job.org/
+2. 找到 **Teams Morning Bot 08:00**（或類似名稱）的 cron job
+3. 點 **History / 執行紀錄**，查看 **7/20 08:00** 是否有紀錄：
+   - **無紀錄** → job 可能被停用、排程錯誤、或帳號問題
+   - **Failed / 401** → GitHub Token 過期或權限不足（需 **Actions: Read and write**）
+   - **Failed / 404** → workflow 檔名或 repo 路徑錯誤
+   - **Success 但 GitHub 無 run** → 檢查 POST body 是否為 `{"ref":"main"}`，URL 是否為  
+     `https://api.github.com/repos/gotodye/teams-morning-bot/actions/workflows/teams_bot.yml/dispatches`
+4. 確認 **Enabled**、時區 **Asia/Taipei**、排程 **`0 8 * * 1-5`**
+5. 點 **Run now** 測試 → 到 GitHub Actions 確認有新 run
+6. Token 過期時到 https://github.com/settings/personal-access-tokens 重新產生並更新 cron-job Headers
+
+合併備援排程後，即使 cron-job 漏跑，**09:00 GitHub 備援**仍應在當日補發（除非兩者都失敗）。
 
 ---
 

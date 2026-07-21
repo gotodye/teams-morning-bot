@@ -75,7 +75,14 @@ gh auth login
 
 ### 步驟 4：雲端排程（不需電腦開機）
 
-正式排程由 **cron-job.org** 在週一至五 **08:00 台北** 觸發 GitHub `workflow_dispatch`（準時、不需電腦開機）。
+正式排程採 **雙重觸發**（週一至五）：
+
+| 來源 | 時間（台北） | 說明 |
+|------|-------------|------|
+| **cron-job.org** | 08:00 | 主要（準時） |
+| **GitHub schedule** | 09:00 | 備援（若 08:00 漏跑；已發送則自動跳過） |
+
+不需電腦開機。漏跑排查見 [docs/cloud_schedule.md](docs/cloud_schedule.md)。
 
 👉 完整設定步驟見 **[docs/cloud_schedule.md](docs/cloud_schedule.md)**
 
