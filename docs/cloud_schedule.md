@@ -38,7 +38,7 @@ schedule:
 | **cron-job.org** | 08:00 週一至五 | 主要（準時） |
 | **GitHub schedule** | 09:00 週一至五 | 備援（若 08:00 漏跑） |
 
-Workflow 使用 **Actions Cache** 記錄「今日已發送」：若 08:00 已成功發送，09:00 備援會自動跳過，避免同一天發兩則。
+Workflow 使用 **GitHub Actions API** 查詢「今日（台北日期）是否已有成功的 workflow run」：若 08:00 已成功發送，09:00 備援會自動跳過，避免同一天發兩則（即使備援排程在 Cache 部署前觸發也能正確判斷）。
 
 **優點**：cron-job.org 漏跑時（例如 2026-07-20 週一），GitHub 備援仍可補發。  
 **缺點**：GitHub 免費版排程為「盡力而為」，實際可能 **10:00～13:00** 才跑（你之前遇過約 13:16）。
@@ -103,7 +103,7 @@ Unregister-ScheduledTask -TaskName "Teams Morning Bot Schedule" -Confirm:$false
 
 ### 3. 避免重複發送
 
-cron-job.org 與 GitHub schedule **可同時啟用**。Workflow 會用 Cache 判斷當日是否已發送，不會因兩個排程各發一則。
+cron-job.org 與 GitHub schedule **可同時啟用**。Workflow 會用 GitHub API 查詢當日是否已有成功 run，不會因兩個排程各發一則。
 
 若仍出現重複，請確認沒有同時開 Windows 本機排程。
 
@@ -120,7 +120,7 @@ cron-job.org 與 GitHub schedule **可同時啟用**。Workflow 會用 Cache 判
 | 雲端有跑但 Teams 沒訊息 | 看 Actions log；常見為國定假日跳過或 Webhook Secret |
 | **某天完全沒發送** | 見下方「cron-job.org 檢查清單」；GitHub 09:00 備援應可補發 |
 | GitHub cron 太晚才跑 | 正常現象；主要仍靠 cron-job.org 08:00 |
-| 同一天發兩則 | 同時開了 Windows 本機排程；或 Cache 未寫入（看 log 是否有 `already sent today`） |
+| 同一天發兩則 | 同時開了 Windows 本機排程；或 dedup 腳本無法讀取 Actions API（看 log） |
 | cron-job 401 | Token 權限需 Actions: Write |
 
 ### cron-job.org 檢查清單（某天漏跑時）
