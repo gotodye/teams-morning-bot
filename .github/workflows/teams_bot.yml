@@ -1,6 +1,7 @@
 name: Teams Morning Bot
 
-# Scheduled by cron-job.org at 08:00 Taipei Mon–Fri (cloud, no PC required).
+# Primary: cron-job.org at 08:00 Taipei Mon–Fri (workflow_dispatch).
+# Backup: GitHub schedule at 09:00 Taipei — skips if cron-job already sent today.
 # See docs/cloud_schedule.md
 on:
   workflow_dispatch:
@@ -23,23 +24,58 @@ on:
         required: false
         default: false
         type: boolean
+  schedule:
+    # UTC 01:00 = Taipei 09:00 Mon–Fri (backup if cron-job.org missed 08:00)
+    - cron: "0 1 * * 1-5"
 
 jobs:
   send-morning-message:
     runs-on: ubuntu-latest
     steps:
+      - name: Set Taipei date
+        id: date
+        run: echo "today=$(TZ=Asia/Taipei date +%F)" >> $GITHUB_OUTPUT
+
+      - name: Check if already sent today
+        id: sent-cache
+        uses: actions/cache@v4
+        with:
+          path: .morning-sent-marker
+          key: morning-sent-${{ steps.date.outputs.today }}
+
+      - name: Decide whether to send
+        id: should-send
+        env:
+          CACHE_HIT: ${{ steps.sent-cache.outputs.cache-hit }}
+          EVENT_NAME: ${{ github.event_name }}
+          FORCE_TYPE: ${{ github.event.inputs.force_message_type }}
+        run: |
+          if [ "$CACHE_HIT" = "true" ] && [ "$EVENT_NAME" = "workflow_dispatch" ] && [ -n "$FORCE_TYPE" ]; then
+            echo "send=true" >> "$GITHUB_OUTPUT"
+            echo "Force message type requested — sending despite cache."
+          elif [ "$CACHE_HIT" = "true" ]; then
+            echo "send=false" >> "$GITHUB_OUTPUT"
+            echo "Morning message already sent today (${{ steps.date.outputs.today }}) — skipping."
+          else
+            echo "send=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Checkout
+        if: steps.should-send.outputs.send == 'true'
         uses: actions/checkout@v4
 
       - name: Set up Python
+        if: steps.should-send.outputs.send == 'true'
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
       - name: Install dependencies
+        if: steps.should-send.outputs.send == 'true'
         run: pip install -r requirements.txt
 
       - name: Check Telegram configuration
+        if: steps.should-send.outputs.send == 'true'
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ vars.TELEGRAM_CHAT_ID || secrets.TELEGRAM_CHAT_ID }}
@@ -47,6 +83,7 @@ jobs:
         run: python scripts/verify_telegram.py
 
       - name: Send morning message to Teams
+        if: steps.should-send.outputs.send == 'true'
         env:
           TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
           MESSAGE_MODE: ${{ vars.MESSAGE_MODE || 'mixed' }}
@@ -70,5 +107,16 @@ jobs:
           MANAGEMENT_QUOTE_WEEKDAY: ${{ vars.MANAGEMENT_QUOTE_WEEKDAY || '2' }}
           INTERACTION_FORMS_URL: ${{ vars.INTERACTION_FORMS_URL || '' }}
           FORCE_MESSAGE_TYPE: ${{ github.event.inputs.force_message_type || '' }}
-          SKIP_WORKDAY_CHECK: ${{ github.event.inputs.skip_workday_check && 'true' || '' }}
+          SKIP_WORKDAY_CHECK: ${{ github.event_name == 'workflow_dispatch' && (github.event.inputs.skip_workday_check == true || github.event.inputs.skip_workday_check == 'true') && 'true' || '' }}
         run: python main.py
+
+      - name: Mark sent today
+        if: steps.should-send.outputs.send == 'true' && success()
+        run: mkdir -p .morning-sent-marker && touch .morning-sent-marker/sent
+
+      - name: Save sent marker
+        if: steps.should-send.outputs.send == 'true' && success()
+        uses: actions/cache/save@v4
+        with:
+          path: .morning-sent-marker
+          key: morning-sent-${{ steps.date.outputs.today }}
