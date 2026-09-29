@@ -1,0 +1,191 @@
+[
+  {
+    "title": "The Checklist Manifesto",
+    "source": "Atul Gawande",
+    "url": "https://atulgawande.com/book/the-checklist-manifesto/",
+    "topic": "reducing errors through simple systems",
+    "fallback_summary": "Gawande shows how well-designed checklists prevent avoidable mistakes in complex work — from surgery to aviation. Discipline and humility beat relying on memory alone when stakes are high."
+  },
+  {
+    "title": "Ikigai: The Japanese Secret to a Long and Happy Life",
+    "source": "Héctor García & Francesc Miralles",
+    "url": "https://ikigaibook.com/",
+    "topic": "finding purpose in everyday life",
+    "fallback_summary": "Drawing on Japan's longest-living communities, the authors frame ikigai as the reason you get up in the morning — the overlap of what you love, what you're good at, and what the day needs. Small daily purpose beats grand plans."
+  },
+  {
+    "title": "The Five Dysfunctions of a Team",
+    "source": "Patrick Lencioni",
+    "url": "https://www.tablegroup.com/books/dysfunctions",
+    "topic": "building trust and accountability on teams",
+    "fallback_summary": "Lencioni maps how absence of trust, fear of conflict, and lack of commitment undermine teams. Vulnerability-based trust is the foundation for honest debate and shared results."
+  },
+  {
+    "title": "The Courage to Be Disliked",
+    "source": "Ichiro Kishimi & Fumitake Koga",
+    "url": "https://www.simonandschuster.com/books/The-Courage-to-Be-Disliked/Ichiro-Kishimi/9781501197277",
+    "topic": "freedom, self-acceptance, and Adlerian psychology",
+    "fallback_summary": "Framed as a dialogue, this bestseller from Japan argues that happiness is a present-tense choice, not a prize for pleasing everyone. Separating your tasks from others' opinions is where real freedom begins."
+  },
+  {
+    "title": "The Progress Principle",
+    "source": "Teresa Amabile & Steven Kramer",
+    "url": "https://hbr.org/2011/05/the-power-of-small-wins",
+    "topic": "motivation through meaningful daily progress",
+    "fallback_summary": "Amabile and Kramer found that the strongest workplace motivator is making meaningful progress on work that matters — even small wins compound into engagement and creativity."
+  },
+  {
+    "title": "Thanks for the Feedback",
+    "source": "Douglas Stone & Sheila Heen",
+    "url": "https://www.stoneandheen.com/thanks-for-the-feedback",
+    "topic": "receiving and using feedback well",
+    "fallback_summary": "Stone and Heen teach that growth depends on how we receive feedback, not just how we give it. Separating triggers from useful signal helps people learn without defensiveness."
+  },
+  {
+    "title": "The Coaching Habit",
+    "source": "Michael Bungay Stanier",
+    "url": "https://boxofcrayons.com/the-coaching-habit/",
+    "topic": "leading through questions instead of advice",
+    "fallback_summary": "Stanier offers seven essential questions that help managers coach in ten minutes or less. Staying curious longer reduces over-helping and builds other people's problem-solving muscle."
+  },
+  {
+    "title": "Crucial Conversations",
+    "source": "Kerry Patterson et al.",
+    "url": "https://cruciallearning.com/crucial-conversations/",
+    "topic": "dialogue when stakes and emotions run high",
+    "fallback_summary": "The authors show how to stay in dialogue when opinions differ and emotions are strong. Safety, shared purpose, and clear stories prevent conflict from derailing important decisions."
+  },
+  {
+    "title": "The Culture Code",
+    "source": "Daniel Coyle",
+    "url": "https://danielcoyle.com/the-culture-code/",
+    "topic": "building psychological safety and belonging",
+    "fallback_summary": "Coyle studies high-performing groups and finds three skills: building safety, sharing vulnerability, and establishing purpose. Belonging cues matter more than talent alone."
+  },
+  {
+    "title": "The Life-Changing Magic of Tidying Up",
+    "source": "Marie Kondo",
+    "url": "https://konmari.com/marie-kondo-books/",
+    "topic": "clarity through keeping only what sparks joy",
+    "fallback_summary": "Kondo's KonMari method is really about decision-making: keep what adds value, thank and release the rest. A tidy space — or inbox, or task list — frees attention for what actually matters."
+  },
+  {
+    "title": "The Infinite Game",
+    "source": "Simon Sinek",
+    "url": "https://simonsinek.com/books/the-infinite-game/",
+    "topic": "long-term purpose over short-term wins",
+    "fallback_summary": "Sinek contrasts finite games played to win with infinite games played to keep going. Just cause, trusting teams, and worthy rivals sustain organizations beyond quarterly metrics."
+  },
+  {
+    "title": "Sapiens: A Brief History of Humankind",
+    "source": "Yuval Noah Harari",
+    "url": "https://www.ynharari.com/book/sapiens-2/",
+    "topic": "how shared stories let humans cooperate at scale",
+    "fallback_summary": "Harari argues our superpower is fiction: money, nations, and companies are shared stories that let strangers cooperate. Understanding the narratives we live inside helps us question — and redesign — them."
+  },
+  {
+    "title": "The Hard Thing About Hard Things",
+    "source": "Ben Horowitz",
+    "url": "https://www.harpercollins.com/products/the-hard-thing-about-hard-things-ben-horowitz",
+    "topic": "leading through uncertainty and crisis",
+    "fallback_summary": "Horowitz shares unfiltered lessons on firing friends, managing fear, and making decisions with incomplete information. Leadership is often lonely work done without a playbook."
+  },
+  {
+    "title": "Nonviolent Communication",
+    "source": "Marshall B. Rosenberg",
+    "url": "https://www.cnvc.org/learn/resources/books",
+    "topic": "empathy and clear requests at work",
+    "fallback_summary": "Rosenberg teaches observations without judgment, naming feelings and needs, and making clear requests. This reduces defensiveness and helps teams resolve conflict without winners and losers."
+  },
+  {
+    "title": "Why We Sleep",
+    "source": "Matthew Walker",
+    "url": "https://www.simonandschuster.com/books/Why-We-Sleep/Matthew-Walker/9781501144325",
+    "topic": "how rest powers focus, mood, and health",
+    "fallback_summary": "Walker gathers decades of science showing sleep is not lost time but the foundation of learning, memory, and emotional balance. Protecting rest is one of the highest-return habits for real productivity."
+  },
+  {
+    "title": "The Power of Moments",
+    "source": "Chip Heath & Dan Heath",
+    "url": "https://heathbrothers.com/books/the-power-of-moments/",
+    "topic": "designing memorable experiences at work",
+    "fallback_summary": "The Heath brothers show how defining moments share peaks, pride, and connection. Small thoughtful gestures — onboarding, recognition, transitions — disproportionately shape how people feel."
+  },
+  {
+    "title": "The Tao of Pooh",
+    "source": "Benjamin Hoff",
+    "url": "https://www.penguinrandomhouse.com/books/56949/the-tao-of-pooh-by-benjamin-hoff/",
+    "topic": "Taoist simplicity through Winnie-the-Pooh",
+    "fallback_summary": "Hoff explains Taoism using Pooh as the model of effortless ease: work with things as they are, not against them. Doing less — but at the right moment — is often wiser than forcing outcomes."
+  },
+  {
+    "title": "Switch: How to Change Things When Change Is Hard",
+    "source": "Chip Heath & Dan Heath",
+    "url": "https://heathbrothers.com/books/switch/",
+    "topic": "behavior change for individuals and teams",
+    "fallback_summary": "Switch frames change as directing the rider, motivating the elephant, and shaping the path. Clear direction plus emotional buy-in and environment design make new habits stick."
+  },
+  {
+    "title": "Quiet: The Power of Introverts",
+    "source": "Susan Cain",
+    "url": "https://www.quietrev.com/the-book",
+    "topic": "valuing introverted strengths at work",
+    "fallback_summary": "Cain challenges the extrovert ideal and highlights deep thinking, listening, and preparation as leadership strengths. Teams perform better when both quiet and vocal styles have room."
+  },
+  {
+    "title": "The Art of Happiness",
+    "source": "Dalai Lama & Howard C. Cutler",
+    "url": "https://www.penguinrandomhouse.com/books/163977/the-art-of-happiness-by-dalai-lama-and-howard-c-cutler/",
+    "topic": "training the mind toward contentment",
+    "fallback_summary": "A psychiatrist interviews the Dalai Lama on living well. The core idea: happiness is a skill built through compassion, perspective, and daily mental habits — less a stroke of luck than a practice."
+  },
+  {
+    "title": "Team of Teams",
+    "source": "General Stanley McChrystal",
+    "url": "https://www.penguinrandomhouse.com/books/316183/team-of-teams-by-general-stanley-mcchrystal-with-tantum-collins-david-silverman-and-chris-fussell/",
+    "topic": "adaptive leadership in fast-changing environments",
+    "fallback_summary": "McChrystal argues that rigid hierarchies fail against fast-moving problems. Shared consciousness and empowered execution let teams act like networks instead of silos."
+  },
+  {
+    "title": "The First 90 Days",
+    "source": "Michael D. Watkins",
+    "url": "https://hbr.org/books/watkins",
+    "topic": "successful transitions into new roles",
+    "fallback_summary": "Watkins offers a roadmap for accelerating learning, securing early wins, and negotiating success in a new position. Transition failures are costly — preparation beats improvisation."
+  },
+  {
+    "title": "Show Your Work!",
+    "source": "Austin Kleon",
+    "url": "https://austinkleon.com/show-your-work/",
+    "topic": "sharing your process to grow and connect",
+    "fallback_summary": "Kleon argues you don't need to be a genius — you need to be findable. Sharing small pieces of your work-in-progress builds skill, feedback, and a network far better than waiting for the perfect finished thing."
+  },
+  {
+    "title": "Multipliers: How the Best Leaders Make Everyone Smarter",
+    "source": "Liz Wiseman",
+    "url": "https://www.wisemaninstitute.com/multipliers",
+    "topic": "amplifying team intelligence as a leader",
+    "fallback_summary": "Wiseman contrasts leaders who drain capability with those who multiply it. Multipliers ask hard questions, delegate ownership, and create room for others to contribute their best thinking."
+  },
+  {
+    "title": "Range: Why Generalists Triumph in a Specialized World",
+    "source": "David Epstein",
+    "url": "https://davidepstein.com/the-range/",
+    "topic": "why broad experience beats early specialization",
+    "fallback_summary": "Epstein shows that in complex, unpredictable fields, people who sample widely and connect across domains often outperform early specialists. Detours and varied interests are features of growth, not detours from it."
+  },
+  {
+    "title": "The Lean Startup",
+    "source": "Eric Ries",
+    "url": "https://theleanstartup.com/",
+    "topic": "validated learning and iterative improvement",
+    "fallback_summary": "Ries advocates build-measure-learn loops instead of big-bang launches. Small experiments reduce waste and help teams discover what customers actually value."
+  },
+  {
+    "title": "Man's Search for Meaning",
+    "source": "Viktor E. Frankl",
+    "url": "https://www.penguinrandomhouse.com/books/132832/mans-search-for-meaning-by-viktor-e-frankl/",
+    "topic": "finding purpose even in hardship",
+    "fallback_summary": "Frankl, a psychiatrist and Holocaust survivor, argues that we can't always choose our circumstances, but we can always choose our response. A sense of meaning — in work, love, or courage — is what carries people through the hard days."
+  }
+]

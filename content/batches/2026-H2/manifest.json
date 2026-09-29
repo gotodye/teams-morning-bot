@@ -1,0 +1,12 @@
+{
+  "period": "2026-H2",
+  "exported_on": "2026-09-29",
+  "source": "content_batch._write_batch_dir",
+  "counts": {
+    "management": 27,
+    "philosophy": 14,
+    "static": 55,
+    "articles": 27,
+    "interactions": 14
+  }
+}
