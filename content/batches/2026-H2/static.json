@@ -1,0 +1,277 @@
+[
+  {
+    "text": "Your calendar is full, but your coffee cup is fuller. Priorities. ☕",
+    "format": "humor",
+    "mood": "humor"
+  },
+  {
+    "text": "The snooze button is a negotiator with terrible terms. You still showed up. 👏",
+    "format": "humor",
+    "mood": "humor"
+  },
+  {
+    "text": "Today's forecast: 80% chance of meetings that could have been an email. ☁️",
+    "format": "humor",
+    "mood": "humor"
+  },
+  {
+    "text": "Your inbox is not a to-do list — it's a suggestion box from the universe. 📥",
+    "format": "humor",
+    "mood": "humor"
+  },
+  {
+    "text": "Reminder: you are not a printer. Low toner is not a personality. 🖨️",
+    "format": "humor",
+    "mood": "humor"
+  },
+  {
+    "text": "The office plant is thriving on pure neglect. Some of us relate deeply. 🪴",
+    "format": "humor",
+    "mood": "humor"
+  },
+  {
+    "text": "Autocorrect changed my mood to 'moist' and honestly, for a Monday, that tracks. 😅",
+    "format": "humor",
+    "mood": "humor"
+  },
+  {
+    "text": "You don't need a perfect morning — just an honest start and one kind choice. 🌤️",
+    "format": "warm",
+    "mood": "warm"
+  },
+  {
+    "text": "Someone on your team is glad you're here today, even if they haven't said it yet. 💬",
+    "format": "warm",
+    "mood": "warm"
+  },
+  {
+    "text": "Progress is still progress when nobody claps. Keep going quietly if you need to. 👣",
+    "format": "warm",
+    "mood": "warm"
+  },
+  {
+    "text": "A deep breath costs nothing and quietly upgrades most conversations. 🌬️",
+    "format": "warm",
+    "mood": "warm"
+  },
+  {
+    "text": "You have handled hard weeks before. This one gets your experience, not your fear. 💪",
+    "format": "warm",
+    "mood": "warm"
+  },
+  {
+    "text": "Micro-challenge: in your first meeting today, ask one real question before offering an answer. Notice what shifts. 🎯",
+    "format": "warm",
+    "mood": "action"
+  },
+  {
+    "text": "Octopuses have three hearts — which one is keeping yours going this morning? Reply with what's fueling you. 🐙",
+    "format": "fact",
+    "mood": "cute"
+  },
+  {
+    "text": "Sea otters hold hands while sleeping so they don't drift apart. Teamwork, illustrated. 🦦",
+    "format": "fact",
+    "mood": "cute"
+  },
+  {
+    "text": "Indonesia is spread across 17,000+ islands. You don't have to do everything today — just island-hop one task at a time. 🏝️",
+    "format": "fact",
+    "mood": "nature"
+  },
+  {
+    "text": "Vietnam is the world's 2nd-largest coffee exporter. Somewhere, your morning cup is quietly saying cảm ơn. ☕",
+    "format": "fact",
+    "mood": "culture"
+  },
+  {
+    "text": "Thailand's calendar runs 543 years ahead — over there it's already the 2560s. You're basically working from the future. 🗓️",
+    "format": "fact",
+    "mood": "culture"
+  },
+  {
+    "text": "Your brain uses about 20% of your body's energy. Fuel it kindly this morning. 🧠",
+    "format": "fact",
+    "mood": "science"
+  },
+  {
+    "text": "A group of flamingos is called a flamboyance. May your stand-up be equally confident. 🦩",
+    "format": "fact",
+    "mood": "cute"
+  },
+  {
+    "text": "Son Doong Cave, Vietnam 🇻🇳\nThe world's largest cave hides its own jungle, river, and clouds underground.\nSome of the biggest things stay quiet until you go looking.",
+    "format": "travel",
+    "image_query": "Son Doong Cave Vietnam largest cave jungle"
+  },
+  {
+    "text": "Raja Ampat, Indonesia 🇮🇩\nJade islands scatter across glass-clear sea at the edge of the map.\nThe best places rarely sit on the shortest route.",
+    "format": "travel",
+    "image_query": "Raja Ampat Indonesia islands aerial turquoise"
+  },
+  {
+    "text": "Kawah Ijen, Indonesia 🇮🇩\nElectric-blue flames flicker from the crater before dawn — fire the color of the sea.\nRare sights reward the early riser.",
+    "format": "travel",
+    "image_query": "Kawah Ijen blue fire volcano Indonesia"
+  },
+  {
+    "text": "Mù Cang Chải, Vietnam 🇻🇳\nTerraced hillsides ripple gold at harvest, each curve shaped by generations of hands.\nSteady effort, season after season, carves something beautiful.",
+    "format": "travel",
+    "image_query": "Mu Cang Chai Vietnam rice terraces golden"
+  },
+  {
+    "text": "Batad Rice Terraces, Philippines 🇵🇭\nStone-walled steps climb the mountains like a 2,000-year-old staircase to the clouds.\nPatience, stacked high enough, becomes a wonder.",
+    "format": "travel",
+    "image_query": "Batad rice terraces Philippines amphitheater"
+  },
+  {
+    "text": "Bagan, Myanmar 🇲🇲\nThousands of pagodas rise from morning mist like prayers left standing in gold light.\nQuiet wonder travels well across time zones.",
+    "format": "travel",
+    "image_query": "Bagan Myanmar temples sunrise balloons"
+  },
+  {
+    "text": "Socotra Island, Yemen 🇾🇪\nDragon-blood trees spread like umbrellas on a landscape that looks borrowed from another planet.\nStrange and rare can still be exactly right.",
+    "format": "travel",
+    "image_query": "Socotra Island Yemen dragon blood trees"
+  },
+  {
+    "text": "Tsingy de Bemaraha, Madagascar 🇲🇬\nLimestone blades rise into a forest of stone you can only cross by rope and nerve.\nSome paths are earned, not strolled.",
+    "format": "travel",
+    "image_query": "Tsingy de Bemaraha Madagascar stone forest"
+  },
+  {
+    "text": "Chefchaouen, Morocco 🇲🇦\nAn entire town washed in a hundred shades of blue, tucked into the Rif Mountains.\nA little color can change the whole mood of a place.",
+    "format": "travel",
+    "image_query": "Chefchaouen Morocco blue city streets"
+  },
+  {
+    "text": "Salar de Uyuni, Bolivia 🇧🇴\nAfter rain, the salt flats mirror the sky until earth and heaven trade places.\nPerspective is a place you can visit.",
+    "format": "travel",
+    "image_query": "Salar de Uyuni Bolivia salt flats mirror"
+  },
+  {
+    "text": "Zhangye Danxia, China 🇨🇳\nHills striped in red, gold, and turquoise, painted slowly over millions of years.\nBeauty layered patiently outlasts anything rushed.",
+    "format": "travel",
+    "image_query": "Zhangye Danxia rainbow mountains China"
+  },
+  {
+    "text": "Caño Cristales, Colombia 🇨🇴\nFor a few weeks a year, a river blushes red, yellow, and green — the 'liquid rainbow'.\nRare timing is its own kind of magic.",
+    "format": "travel",
+    "image_query": "Cano Cristales Colombia river of five colors"
+  },
+  {
+    "text": "Lençóis Maranhenses, Brazil 🇧🇷\nWhite dunes cradle turquoise lagoons that appear only after the rains.\nEven a desert keeps a little water for the right moment.",
+    "format": "travel",
+    "image_query": "Lencois Maranhenses Brazil dunes lagoons"
+  },
+  {
+    "text": "Wadi Rum, Jordan 🇯🇴\nRose sand and vast silence stretch wider than any to-do list can travel.\nStep into the morning unhurried.",
+    "format": "travel",
+    "image_query": "Wadi Rum Jordan desert red sand"
+  },
+  {
+    "text": "Tiger's Nest, Bhutan 🇧🇹\nA monastery clings to a cliff above the clouds, reached only on foot.\nSome heights are meant to be climbed slowly, and on purpose.",
+    "format": "travel",
+    "image_query": "Paro Taktsang Tiger's Nest Bhutan monastery"
+  },
+  {
+    "text": "Thursday energy: not quite Friday, but the trailer looks promising. 🎬",
+    "format": "humor",
+    "mood": "humor"
+  },
+  {
+    "text": "The office thermostat has three settings: Arctic, Sahara, and 'who touched this'. 🌡️",
+    "format": "humor",
+    "mood": "humor"
+  },
+  {
+    "text": "Meetings are like clouds — some bring rain, some just block the sun. Aim to be neither. ☁️",
+    "format": "humor",
+    "mood": "humor"
+  },
+  {
+    "text": "Coffee: because adulting requires a loading screen. ☕",
+    "format": "humor",
+    "mood": "humor"
+  },
+  {
+    "text": "Your future self already thanked you for starting the hard task first. Weird timeline, great choice. ⏳",
+    "format": "humor",
+    "mood": "humor"
+  },
+  {
+    "text": "Weekend loading… please keep a little kindness cached for Monday. 💾",
+    "format": "humor",
+    "mood": "humor"
+  },
+  {
+    "text": "If your week were a playlist, today is the bridge track — still moving. 🎵",
+    "format": "warm",
+    "mood": "warm"
+  },
+  {
+    "text": "You made it this far with your humor intact. That genuinely counts. 🎉",
+    "format": "warm",
+    "mood": "warm"
+  },
+  {
+    "text": "Done lists beat perfect plans every single time. ✅",
+    "format": "warm",
+    "mood": "warm"
+  },
+  {
+    "text": "Kindness is free, remembered, and weirdly contagious. Start a small outbreak today. 💛",
+    "format": "warm",
+    "mood": "warm"
+  },
+  {
+    "text": "Rest isn't the reward for finishing — it's part of how good work gets made. 🌙",
+    "format": "warm",
+    "mood": "warm"
+  },
+  {
+    "text": "Micro-challenge: send one colleague a specific thank-you before lunch. Specific beats generic. 🙏",
+    "format": "warm",
+    "mood": "action"
+  },
+  {
+    "text": "Crows can recognize human faces for years. Be memorable for the right reasons. 🐦‍⬛",
+    "format": "fact",
+    "mood": "nature"
+  },
+  {
+    "text": "Trees share nutrients through underground fungal networks. Collaboration is older than email. 🌳",
+    "format": "fact",
+    "mood": "nature"
+  },
+  {
+    "text": "Taipei 101 rides out typhoons on a giant golden pendulum. Balance under pressure is a design choice. 🏙️",
+    "format": "fact",
+    "mood": "architecture"
+  },
+  {
+    "text": "The world's largest flower, the Rafflesia, blooms in the forests of Sumatra — rare things are worth the wait. 🌺",
+    "format": "fact",
+    "mood": "nature"
+  },
+  {
+    "text": "Honey never spoils — jars 3,000 years old were found still edible. Patience keeps well. 🍯",
+    "format": "fact",
+    "mood": "science"
+  },
+  {
+    "text": "Bananas are berries, but strawberries aren't. Botany is chaos — what's your plot twist today? 🍌",
+    "format": "fact",
+    "mood": "nature"
+  },
+  {
+    "text": "Pamukkale, Turkey 🇹🇷\nWhite mineral terraces spill down the hillside like frozen waterfalls of milk.\nBeauty can be built one gentle layer at a time.",
+    "format": "travel",
+    "image_query": "Pamukkale Turkey white travertine terraces"
+  },
+  {
+    "text": "Kelimutu, Indonesia 🇮🇩\nThree crater lakes on one volcano, each a different color — and the colors quietly change.\nNot everything needs to stay the same to be at peace.",
+    "format": "travel",
+    "image_query": "Kelimutu crater lakes Flores Indonesia"
+  }
+]

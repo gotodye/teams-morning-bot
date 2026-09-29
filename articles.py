@@ -1,4 +1,7 @@
-"""Curated famous articles on work performance and positive life mindset."""
+"""Curated famous articles and books — work performance, growth, and life mindset.
+
+Mix of Western classics, non-business perspectives, and Asian voices (~80:20).
+"""
 
 from __future__ import annotations
 
@@ -93,14 +96,14 @@ ARTICLES: list[Article] = [
         ),
     },
     {
-        "title": "The Making of an Expert",
-        "source": "Harvard Business Review",
-        "url": "https://hbr.org/2007/07/the-making-of-an-expert",
-        "topic": "deliberate practice and mastery",
+        "title": "Ikigai: The Japanese Secret to a Long and Happy Life",
+        "source": "Héctor García & Francesc Miralles",
+        "url": "https://ikigaibook.com/",
+        "topic": "finding purpose in everyday life",
         "fallback_summary": (
-            "Ericsson's research finds that elite performance comes from deliberate "
-            "practice: focused repetition, immediate feedback, and stretching beyond "
-            "comfort zones — not talent alone or years of routine work."
+            "Drawing on Japan's longest-living communities, the authors frame ikigai as "
+            "the reason you get up in the morning — the overlap of what you love, what "
+            "you're good at, and what the day needs. Small daily purpose beats grand plans."
         ),
     },
     {
@@ -115,14 +118,14 @@ ARTICLES: list[Article] = [
         ),
     },
     {
-        "title": "How to Stop Worrying and Start Living",
-        "source": "Dale Carnegie",
-        "url": "https://www.dalecarnegie.com/en/books/how-to-stop-worrying-and-start-living",
-        "topic": "reducing anxiety and staying constructive",
+        "title": "The Courage to Be Disliked",
+        "source": "Ichiro Kishimi & Fumitake Koga",
+        "url": "https://www.simonandschuster.com/books/The-Courage-to-Be-Disliked/Ichiro-Kishimi/9781501197277",
+        "topic": "freedom, self-acceptance, and Adlerian psychology",
         "fallback_summary": (
-            "Carnegie offers practical tools to break the worry habit: act on facts, "
-            "accept the worst to reduce fear, keep busy with purposeful action, and "
-            "focus on what you can influence today."
+            "Framed as a dialogue, this bestseller from Japan argues that happiness is a "
+            "present-tense choice, not a prize for pleasing everyone. Separating your tasks "
+            "from others' opinions is where real freedom begins."
         ),
     },
     {
@@ -170,6 +173,17 @@ ARTICLES: list[Article] = [
         ),
     },
     {
+        "title": "The Life-Changing Magic of Tidying Up",
+        "source": "Marie Kondo",
+        "url": "https://konmari.com/marie-kondo-books/",
+        "topic": "clarity through keeping only what sparks joy",
+        "fallback_summary": (
+            "Kondo's KonMari method is really about decision-making: keep what adds value, "
+            "thank and release the rest. A tidy space — or inbox, or task list — frees "
+            "attention for what actually matters."
+        ),
+    },
+    {
         "title": "The Obstacle Is the Way",
         "source": "Ryan Holiday",
         "url": "https://www.thepaintedporch.com/products/the-obstacle-is-the-way",
@@ -203,14 +217,14 @@ ARTICLES: list[Article] = [
         ),
     },
     {
-        "title": "Dare to Lead",
-        "source": "Brené Brown",
-        "url": "https://brenebrown.com/hubs/dare-to-lead/",
-        "topic": "brave leadership and trust",
+        "title": "The Art of Happiness",
+        "source": "Dalai Lama & Howard C. Cutler",
+        "url": "https://www.penguinrandomhouse.com/books/163977/the-art-of-happiness-by-dalai-lama-and-howard-c-cutler/",
+        "topic": "training the mind toward contentment",
         "fallback_summary": (
-            "Brown defines daring leadership as rumbling with vulnerability, living into "
-            "values, braving trust, and learning to rise after failure. Courageous "
-            "leaders create cultures where people feel safe to innovate."
+            "A psychiatrist interviews the Dalai Lama on living well. The core idea: "
+            "happiness is a skill built through compassion, perspective, and daily mental "
+            "habits — less a stroke of luck than a practice."
         ),
     },
     {
@@ -225,14 +239,14 @@ ARTICLES: list[Article] = [
         ),
     },
     {
-        "title": "Emotional Agility",
-        "source": "Susan David / Harvard Business Review",
-        "url": "https://hbr.org/2013/11/emotional-agility",
-        "topic": "navigating emotions with flexibility",
+        "title": "Sapiens: A Brief History of Humankind",
+        "source": "Yuval Noah Harari",
+        "url": "https://www.ynharari.com/book/sapiens-2/",
+        "topic": "how shared stories let humans cooperate at scale",
         "fallback_summary": (
-            "David argues that rigid positivity or suppression backfires. Emotional agility "
-            "means noticing feelings without being ruled by them — then choosing values-aligned "
-            "actions that support resilience and better decisions at work."
+            "Harari argues our superpower is fiction: money, nations, and companies are "
+            "shared stories that let strangers cooperate. Understanding the narratives we "
+            "live inside helps us question — and redesign — them."
         ),
     },
     {
@@ -247,25 +261,14 @@ ARTICLES: list[Article] = [
         ),
     },
     {
-        "title": "Radical Candor",
-        "source": "Kim Scott",
-        "url": "https://www.radicalcandor.com/our-approach/",
-        "topic": "caring personally while challenging directly",
+        "title": "Why We Sleep",
+        "source": "Matthew Walker",
+        "url": "https://www.simonandschuster.com/books/Why-We-Sleep/Matthew-Walker/9781501144325",
+        "topic": "how rest powers focus, mood, and health",
         "fallback_summary": (
-            "Scott's framework urges leaders to care personally and challenge directly — "
-            "honest feedback rooted in respect. Avoiding hard conversations creates ruinous "
-            "empathy; candor without care feels obnoxious. Balance builds trust and results."
-        ),
-    },
-    {
-        "title": "Getting Things Done",
-        "source": "David Allen",
-        "url": "https://gettingthingsdone.com/what-is-gtd/",
-        "topic": "stress-free productivity and clear thinking",
-        "fallback_summary": (
-            "Allen's GTD method captures commitments outside your head, clarifies next "
-            "actions, and reviews regularly. A trusted system reduces mental clutter so "
-            "you can focus on meaningful work instead of background anxiety."
+            "Walker gathers decades of science showing sleep is not lost time but the "
+            "foundation of learning, memory, and emotional balance. Protecting rest is one "
+            "of the highest-return habits for real productivity."
         ),
     },
     {
@@ -280,36 +283,36 @@ ARTICLES: list[Article] = [
         ),
     },
     {
-        "title": "Give and Take",
-        "source": "Adam Grant",
-        "url": "https://www.adamgrant.net/give-and-take",
-        "topic": "generosity, reciprocity, and success",
+        "title": "The Tao of Pooh",
+        "source": "Benjamin Hoff",
+        "url": "https://www.penguinrandomhouse.com/books/56949/the-tao-of-pooh-by-benjamin-hoff/",
+        "topic": "Taoist simplicity through Winnie-the-Pooh",
         "fallback_summary": (
-            "Grant shows that givers, takers, and matchers behave differently at work. "
-            "Smart givers — generous but with boundaries — often build the strongest "
-            "networks, reputations, and long-term career success."
+            "Hoff explains Taoism using Pooh as the model of effortless ease: work with "
+            "things as they are, not against them. Doing less — but at the right moment — "
+            "is often wiser than forcing outcomes."
         ),
     },
     {
-        "title": "Leaders Eat Last",
-        "source": "Simon Sinek",
-        "url": "https://simonsinek.com/books/leaders-eat-last/",
-        "topic": "trust, safety, and servant leadership",
+        "title": "Show Your Work!",
+        "source": "Austin Kleon",
+        "url": "https://austinkleon.com/show-your-work/",
+        "topic": "sharing your process to grow and connect",
         "fallback_summary": (
-            "Sinek explains that great leaders create a Circle of Safety — people feel "
-            "protected from internal politics so they can cooperate and take risks. When "
-            "leaders put the team first, trust and performance compound."
+            "Kleon argues you don't need to be a genius — you need to be findable. Sharing "
+            "small pieces of your work-in-progress builds skill, feedback, and a network "
+            "far better than waiting for the perfect finished thing."
         ),
     },
     {
-        "title": "Drive: The Surprising Truth About What Motivates Us",
-        "source": "Daniel H. Pink",
-        "url": "https://www.danpink.com/books/drive/",
-        "topic": "autonomy, mastery, and purpose at work",
+        "title": "Range: Why Generalists Triumph in a Specialized World",
+        "source": "David Epstein",
+        "url": "https://davidepstein.com/the-range/",
+        "topic": "why broad experience beats early specialization",
         "fallback_summary": (
-            "Pink argues that carrots and sticks work poorly for creative knowledge work. "
-            "Lasting motivation comes from autonomy over your work, the pursuit of mastery, "
-            "and connecting daily tasks to a larger purpose."
+            "Epstein shows that in complex, unpredictable fields, people who sample widely "
+            "and connect across domains often outperform early specialists. Detours and "
+            "varied interests are features of growth, not detours from it."
         ),
     },
 ]

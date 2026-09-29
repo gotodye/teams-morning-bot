@@ -1,4 +1,8 @@
-"""Static B+ message pools — humor, warmth, facts, and literary travel spots."""
+"""Static B+ message pools — humor, warmth, facts, and novel travel spots.
+
+Humor is workplace/life-general (not engineer-only); facts include Asian trivia;
+travel favors off-the-beaten-path places, weighted toward Southeast Asia.
+"""
 
 from __future__ import annotations
 
@@ -42,63 +46,63 @@ def _msg(
 # --- Monday: kickoff energy ---
 MONDAY_POOL: list[StaticMessage] = [
     _msg(
-        "Your brain before coffee is like legacy code — it works, "
-        "but nobody should touch it before 9 AM. ☕",
+        "Monday is just the universe hitting the 'new sprint' button. Stretch first. 🌅",
         "humor",
         mood="humor",
     ),
     _msg(
-        "Monday has a PR problem. Good thing we're here to rewrite the narrative. 📝",
+        "Your Monday to-do list called — it would like to negotiate a shorter contract. 📋",
         "humor",
         mood="humor",
     ),
     _msg(
-        "Why do programmers prefer dark mode? Because light attracts bugs. 🐛",
+        "Coffee: Monday's most reliable coworker. ☕",
         "humor",
-        mood="humor",
+        mood="coffee",
     ),
     _msg(
         "You're not behind — you're just loading. "
-        "Great things take a moment to initialize. ⚡",
+        "Great things take a moment to get going. ⚡",
         "warm",
         mood="warm",
     ),
     _msg(
-        "New week, clean branch. Commit something you'll be proud of by Friday. 🌅",
+        "New week, clean slate. Do one thing today you'll be glad about on Friday. 🌱",
         "warm",
         mood="warm",
     ),
     _msg(
         "Honey never spoils — archaeologists found 3,000-year-old honey still edible. "
-        "Patience has its rewards. 🍯",
+        "Patience keeps. 🍯",
         "fact",
         mood="nature",
     ),
     _msg(
-        "Octopuses have three hearts. You only need one — fill it with purpose today. 🐙",
+        "Indonesia spans 17,000+ islands. You don't have to reach them all today — "
+        "just set sail for one. 🏝️",
         "fact",
-        mood="cute",
+        mood="culture",
     ),
     _msg(
-        "Santorini, Greece 🇬🇷\n"
-        "White walls hold the morning light like unfinished poems.\n"
-        "The Aegean doesn't hurry — and for a moment, neither should we.",
+        "Son Doong Cave, Vietnam 🇻🇳\n"
+        "The world's largest cave hides its own jungle, river, and clouds underground.\n"
+        "Some of the biggest things stay quiet until you go looking.",
         "travel",
-        image_query="Santorini Greece blue domes caldera sunrise landscape",
+        image_query="Son Doong Cave Vietnam largest cave jungle",
     ),
     _msg(
-        "Ha Long Bay, Vietnam 🇻🇳\n"
-        "Limestone islands drift on mist like thoughts surfacing slowly from deep water.\n"
-        "Some mornings are meant to be looked at, not solved.",
+        "Chefchaouen, Morocco 🇲🇦\n"
+        "An entire town washed in a hundred shades of blue, tucked into the Rif Mountains.\n"
+        "A little color can change the whole mood of a place.",
         "travel",
-        image_query="Ha Long Bay Vietnam limestone karst mist scenic",
+        image_query="Chefchaouen Morocco blue city streets",
     ),
     _msg(
-        "Arashiyama, Kyoto 🇯🇵\n"
-        "Bamboo shadows sway in a green half-light, as if time folded itself quieter here.\n"
+        "Bagan, Myanmar 🇲🇲\n"
+        "Thousands of pagodas rise from morning mist like prayers left standing in gold light.\n"
         "Carry a little of that stillness into your first hour.",
         "travel",
-        image_query="Arashiyama bamboo grove Kyoto Japan morning light",
+        image_query="Bagan Myanmar temples sunrise balloons",
     ),
 ]
 
@@ -111,12 +115,12 @@ TUESDAY_POOL: list[StaticMessage] = [
         mood="humor",
     ),
     _msg(
-        "'It's just a small change' — famous last words before a two-week sprint. 😅",
+        "'It's just a small change' — famous last words before a very long afternoon. 😅",
         "humor",
         mood="humor",
     ),
     _msg(
-        "Ctrl+Z works in code, not in meetings. Think before you speak. ⌨️",
+        "Your inbox is not a to-do list — it's a suggestion box from the universe. 📥",
         "humor",
         mood="humor",
     ),
@@ -136,9 +140,10 @@ TUESDAY_POOL: list[StaticMessage] = [
         mood="warm",
     ),
     _msg(
-        "Bananas are berries, but strawberries aren't. Nature loves plot twists — so should we. 🍌",
+        "Vietnam is the world's 2nd-largest coffee exporter. "
+        "Somewhere, your morning cup is quietly saying cảm ơn. ☕",
         "fact",
-        mood="nature",
+        mood="culture",
     ),
     _msg(
         "Hummingbirds are the only birds that can fly backward. "
@@ -147,18 +152,18 @@ TUESDAY_POOL: list[StaticMessage] = [
         mood="nature",
     ),
     _msg(
-        "Lake Louise, Canada 🇨🇦\n"
-        "Turquoise water mirrors pine and snow like the earth is dreaming in color.\n"
-        "Let a little of that clarity settle in before the inbox opens.",
+        "Raja Ampat, Indonesia 🇮🇩\n"
+        "Jade islands scatter across glass-clear sea at the edge of the map.\n"
+        "The best places rarely sit on the shortest route.",
         "travel",
-        image_query="Lake Louise Banff Canada turquoise lake mountains scenic",
+        image_query="Raja Ampat Indonesia islands aerial turquoise",
     ),
     _msg(
-        "Machu Picchu, Peru 🇵🇪\n"
-        "Clouds wander through ancient stone as if memory itself were breathing.\n"
-        "Some heights are reached slowly — and beautifully.",
+        "Salar de Uyuni, Bolivia 🇧🇴\n"
+        "After rain, the salt flats mirror the sky until earth and heaven trade places.\n"
+        "Perspective is a place you can visit.",
         "travel",
-        image_query="Machu Picchu Peru clouds ancient ruins landscape",
+        image_query="Salar de Uyuni Bolivia salt flats mirror",
     ),
 ]
 
@@ -170,12 +175,7 @@ WEDNESDAY_POOL: list[StaticMessage] = [
         mood="coffee",
     ),
     _msg(
-        "Debugging is like being a detective in a crime movie where you're also the murderer. 🔍",
-        "humor",
-        mood="humor",
-    ),
-    _msg(
-        "My code doesn't have bugs — it has undocumented features. (Kidding. Mostly.) 🙃",
+        "The office plant is thriving on pure neglect. Some of us relate deeply. 🪴",
         "humor",
         mood="humor",
     ),
@@ -190,52 +190,53 @@ WEDNESDAY_POOL: list[StaticMessage] = [
         mood="warm",
     ),
     _msg(
+        "Thailand's calendar runs 543 years ahead — over there it's already the 2560s. "
+        "You're basically working from the future. 🗓️",
+        "fact",
+        mood="culture",
+    ),
+    _msg(
         "Polar bears have black skin under white fur. Don't judge the surface — look deeper. 🐻‍❄️",
         "fact",
         mood="nature",
     ),
     _msg(
-        "Water is densest at 4°C — that's why ice floats. Stay flexible; rigidity sinks. 💧",
-        "fact",
-        mood="nature",
+        "Kawah Ijen, Indonesia 🇮🇩\n"
+        "Electric-blue flames flicker from the crater before dawn — fire the color of the sea.\n"
+        "Rare sights reward the early riser.",
+        "travel",
+        image_query="Kawah Ijen blue fire volcano Indonesia",
     ),
     _msg(
-        "Mount Fuji, Japan 🇯🇵\n"
-        "Snow-capped peak above a sea of clouds — quiet, vast, and impossibly still.\n"
-        "Clarity often arrives before the noise of the day.",
+        "Zhangye Danxia, China 🇨🇳\n"
+        "Hills striped in red, gold, and turquoise, painted slowly over millions of years.\n"
+        "Beauty layered patiently outlasts anything rushed.",
         "travel",
-        image_query="Mount Fuji sunrise clouds Japan landscape scenic",
+        image_query="Zhangye Danxia rainbow mountains China",
     ),
     _msg(
-        "Blue Lagoon, Iceland 🇮🇸\n"
-        "Steam rises from milky blue water under a pale Nordic sky — earth breathing softly.\n"
-        "Let today begin a little softer than yesterday.",
+        "Tiger's Nest, Bhutan 🇧🇹\n"
+        "A monastery clings to a cliff above the clouds, reached only on foot.\n"
+        "Some heights are meant to be climbed slowly, and on purpose.",
         "travel",
-        image_query="Blue Lagoon Iceland geothermal steam scenic landscape",
-    ),
-    _msg(
-        "Amalfi Coast, Italy 🇮🇹\n"
-        "Cliffs spill into cobalt water as if the coastline were painted in one confident stroke.\n"
-        "Beauty, sometimes, is simply paying attention.",
-        "travel",
-        image_query="Amalfi Coast Italy cliff sea colorful village scenic",
+        image_query="Paro Taktsang Tiger's Nest Bhutan monastery",
     ),
 ]
 
 # --- Thursday: finish-line energy ---
 THURSDAY_POOL: list[StaticMessage] = [
     _msg(
-        "'Works on my machine' is not a deployment strategy. Let's ship with confidence. 🚀",
+        "Thursday energy: not quite Friday, but the trailer looks promising. 🎬",
         "humor",
         mood="humor",
     ),
     _msg(
-        "Today's energy: 60% coffee, 30% curiosity, 10% controlled chaos. Blend well. ☕",
+        "Today's forecast: 80% chance of meetings that could have been an email. ☁️",
         "humor",
-        mood="coffee",
+        mood="humor",
     ),
     _msg(
-        "A clean desk is a sign of a cluttered hard drive. Organize priorities, not just icons. 🖥️",
+        "The office thermostat has three settings: Arctic, Sahara, and 'who touched this'. 🌡️",
         "humor",
         mood="humor",
     ),
@@ -250,53 +251,49 @@ THURSDAY_POOL: list[StaticMessage] = [
         mood="warm",
     ),
     _msg(
+        "Taipei 101 rides out typhoons on a giant golden pendulum. "
+        "Balance under pressure is a design choice. 🏙️",
+        "fact",
+        mood="architecture",
+    ),
+    _msg(
         "Sunlight takes 8 minutes 20 seconds to reach Earth. "
         "You're always seeing the past — but building the future. ☀️",
         "fact",
         mood="warm",
     ),
     _msg(
-        "The Eiffel Tower grows ~15 cm taller in summer. Expand your comfort zone today. 🗼",
-        "fact",
-        mood="nature",
+        "Batad Rice Terraces, Philippines 🇵🇭\n"
+        "Stone-walled steps climb the mountains like a 2,000-year-old staircase to the clouds.\n"
+        "Patience, stacked high enough, becomes a wonder.",
+        "travel",
+        image_query="Batad rice terraces Philippines amphitheater",
     ),
     _msg(
-        "Geirangerfjord, Norway 🇳🇴\n"
-        "Waterfalls thread down green cliffs into still fjord water — nature in no hurry at all.\n"
-        "Borrow that unhurried grace for the hours ahead.",
+        "Socotra Island, Yemen 🇾🇪\n"
+        "Dragon-blood trees spread like umbrellas on a landscape borrowed from another planet.\n"
+        "Strange and rare can still be exactly right.",
         "travel",
-        image_query="Geirangerfjord Norway fjord waterfall scenic landscape",
+        image_query="Socotra Island Yemen dragon blood trees",
     ),
     _msg(
-        "Cappadocia, Turkey 🇹🇷\n"
-        "Balloons drift over honey-colored valleys at dawn, as if the sky were gently exhaling.\n"
-        "Lift your mood before the day asks you to.",
+        "Wadi Rum, Jordan 🇯🇴\n"
+        "Rose sand and vast silence stretch wider than any to-do list can travel.\n"
+        "Step into the morning unhurried.",
         "travel",
-        image_query="Cappadocia Turkey hot air balloons sunrise valley",
-    ),
-    _msg(
-        "Maldives 🇲🇻\n"
-        "Sand so pale and water so clear the horizon forgets where one ends and the other begins.\n"
-        "Float through this morning, even if only in your imagination.",
-        "travel",
-        image_query="Maldives turquoise lagoon overwater villa scenic aerial",
+        image_query="Wadi Rum Jordan desert red sand",
     ),
 ]
 
 # --- Friday: light and grateful ---
 FRIDAY_POOL: list[StaticMessage] = [
     _msg(
-        "Why did the developer go broke? Because they used up all their cache. Ba dum tss. 💸",
+        "Coffee: because adulting requires a loading screen. ☕",
         "humor",
-        mood="humor",
+        mood="coffee",
     ),
     _msg(
-        "Pro tip: the reply-all button is a group trust exercise. Choose wisely. 📧",
-        "humor",
-        mood="humor",
-    ),
-    _msg(
-        "Stand-up meetings are cardio for your career. Show up, speak up, level up. 🏃",
+        "Weekend loading… please keep a little kindness cached for Monday. 💾",
         "humor",
         mood="humor",
     ),
@@ -311,37 +308,42 @@ FRIDAY_POOL: list[StaticMessage] = [
         mood="warm",
     ),
     _msg(
+        "Kindness is free, remembered, and weirdly contagious. Start a small outbreak today. 💛",
+        "warm",
+        mood="warm",
+    ),
+    _msg(
         "Penguins give pebbles as gifts to show affection. "
         "Who on your team deserves a quiet thank-you today? 🐧",
         "fact",
         mood="cute",
     ),
     _msg(
-        "Cows have best friends and get stressed when separated. "
-        "Check in on your work buddy before the week ends. 🐄",
+        "The world's largest flower, the Rafflesia, blooms in the forests of Sumatra — "
+        "rare things are worth the wait. 🌺",
         "fact",
-        mood="cute",
+        mood="nature",
     ),
     _msg(
-        "Santorini at dusk, Greece 🇬🇷\n"
-        "Gold light pools in narrow streets as the sea turns violet — evening arriving like a slow compliment.\n"
-        "Close the week with something gentle.",
+        "Mù Cang Chải, Vietnam 🇻🇳\n"
+        "Terraced hillsides ripple gold at harvest, each curve shaped by generations of hands.\n"
+        "Steady effort, season after season, carves something beautiful.",
         "travel",
-        image_query="Santorini Greece sunset golden hour caldera scenic",
+        image_query="Mu Cang Chai Vietnam rice terraces golden",
     ),
     _msg(
-        "Milford Sound, New Zealand 🇳🇿\n"
-        "Rain-misted peaks rise from dark water like the world is whispering in lowercase.\n"
-        "Take one quiet breath before the week lets go.",
+        "Lençóis Maranhenses, Brazil 🇧🇷\n"
+        "White dunes cradle turquoise lagoons that appear only after the rains.\n"
+        "Even a desert keeps a little water for the right moment.",
         "travel",
-        image_query="Milford Sound New Zealand fjord mountains mist scenic",
+        image_query="Lencois Maranhenses Brazil dunes lagoons",
     ),
     _msg(
-        "Lavender fields, Provence 🇫🇷\n"
-        "Purple rows breathe fragrance into warm air — summer holding still for one last look.\n"
-        "End the week colorfully, even if only in your mind.",
+        "Kelimutu, Indonesia 🇮🇩\n"
+        "Three crater lakes on one volcano, each a different color — and the colors quietly change.\n"
+        "Not everything needs to stay the same to be at peace.",
         "travel",
-        image_query="Provence France lavender fields summer scenic landscape",
+        image_query="Kelimutu crater lakes Flores Indonesia",
     ),
 ]
 
@@ -367,42 +369,42 @@ STATIC_GENERAL: list[StaticMessage] = [
         mood="warm",
     ),
     _msg(
-        "You are about 1 cm taller in the morning. Stand tall in every sense today. 📏",
-        "fact",
-        mood="nature",
+        "Micro-challenge: send one colleague a specific thank-you before lunch. "
+        "Specific beats generic. 🙏",
+        "warm",
+        mood="action",
     ),
     _msg(
-        "A snail can sleep for three years. Friday mood? We feel you. But we're awake now. 😄",
+        "Octopuses have three hearts — which one is keeping yours going this morning? "
+        "Reply with what's fueling you. 🐙",
         "fact",
         mood="cute",
     ),
     _msg(
-        "Petra, Jordan 🇯🇴\n"
-        "Rose-red stone glows in narrow canyon light — a city half memory, half miracle.\n"
-        "Wonder is never wasted on a workday morning.",
-        "travel",
-        image_query="Petra Jordan Treasury rose red canyon scenic",
+        "Sea otters hold hands while sleeping so they don't drift apart. Teamwork, illustrated. 🦦",
+        "fact",
+        mood="cute",
     ),
     _msg(
-        "Grand Canyon, USA 🇺🇸\n"
-        "Layers of time exposed in copper and rust — the earth telling stories without words.\n"
-        "Step into today knowing some depths are worth admiring.",
+        "Tsingy de Bemaraha, Madagascar 🇲🇬\n"
+        "Limestone blades rise into a forest of stone you can only cross by rope and nerve.\n"
+        "Some paths are earned, not strolled.",
         "travel",
-        image_query="Grand Canyon USA sunrise scenic landscape aerial",
+        image_query="Tsingy de Bemaraha Madagascar stone forest",
     ),
     _msg(
-        "Bora Bora, French Polynesia 🇵🇫\n"
-        "Lagoon blue so vivid it feels borrowed from a dream you almost remember.\n"
-        "Let your shoulders drop — the weekend is nearer than it looks.",
+        "Caño Cristales, Colombia 🇨🇴\n"
+        "For a few weeks a year, a river blushes red, yellow, and green — the 'liquid rainbow'.\n"
+        "Rare timing is its own kind of magic.",
         "travel",
-        image_query="Bora Bora turquoise lagoon overwater bungalow scenic",
+        image_query="Cano Cristales Colombia river of five colors",
     ),
     _msg(
-        "Serengeti at dawn, Tanzania 🇹🇿\n"
-        "Golden grass holds the first light as the plain wakes in slow, ancient rhythm.\n"
-        "Begin today with that same unhurried courage.",
+        "Pamukkale, Turkey 🇹🇷\n"
+        "White mineral terraces spill down the hillside like frozen waterfalls of milk.\n"
+        "Beauty can be built one gentle layer at a time.",
         "travel",
-        image_query="Serengeti Tanzania savanna sunrise golden landscape wildlife",
+        image_query="Pamukkale Turkey white travertine terraces",
     ),
 ]
 

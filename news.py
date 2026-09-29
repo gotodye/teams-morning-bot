@@ -26,6 +26,7 @@ REGION_LABELS = {
     "HK": "Hong Kong",
     "VN": "Vietnam",
     "ID": "Indonesia",
+    "TH": "Thailand",
 }
 
 REGION_FEEDS = {
@@ -33,6 +34,7 @@ REGION_FEEDS = {
     "HK": "https://news.google.com/rss?hl=en&gl=HK&ceid=HK:en",
     "VN": "https://news.google.com/rss?hl=en&gl=VN&ceid=VN:en",
     "ID": "https://news.google.com/rss?hl=en&gl=ID&ceid=ID:en",
+    "TH": "https://news.google.com/rss?hl=en&gl=TH&ceid=TH:en",
 }
 
 GLOBAL_FEEDS = {
@@ -114,6 +116,7 @@ REGION_TERMS: dict[str, tuple[str, ...]] = {
     "HK": ("hong kong", "hkma", "hang seng"),
     "VN": ("vietnam", "hanoi", "ho chi minh", "saigon"),
     "ID": ("indonesia", "jakarta", "java", "bali"),
+    "TH": ("thailand", "bangkok", "phuket", "chiang mai", "thai"),
 }
 
 

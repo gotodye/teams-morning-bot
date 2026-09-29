@@ -110,20 +110,20 @@ INTERACTIONS: list[Interaction] = [
         "channel_fallback": "",
     },
     {
-        "headline": "Skill Spotlight",
+        "headline": "Hometown Breakfast",
         "kind": "channel",
         "body": (
-            "What's one skill — technical or soft — you've been building lately? "
-            "Share what you're practicing and why it matters to you."
+            "What does a typical breakfast look like where you grew up? "
+            "A dish, a drink, a photo — let's take a little tour of the team's tables. 🍳🍜"
         ),
         "channel_fallback": "",
     },
     {
-        "headline": "Team Superpower",
+        "headline": "Untranslatable Word",
         "kind": "channel",
         "body": (
-            "In one sentence: what do you think this team's superpower is? "
-            "Let's see if we describe ourselves the same way."
+            "Teach us one word or phrase from your language that's hard to translate — "
+            "and what it really means. 🌏"
         ),
         "channel_fallback": "",
     },

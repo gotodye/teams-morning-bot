@@ -1,0 +1,86 @@
+[
+  {
+    "headline": "Weekend Recharge",
+    "kind": "channel",
+    "body": "What recharged you this past weekend — sleep, people, nature, or something else? One line is plenty.",
+    "channel_fallback": ""
+  },
+  {
+    "headline": "Skill Spotlight",
+    "kind": "channel",
+    "body": "What's one skill you're quietly getting better at this month? Share the skill and one tiny habit helping you practice it.",
+    "channel_fallback": ""
+  },
+  {
+    "headline": "Helpful Habit",
+    "kind": "channel",
+    "body": "Drop one work habit that made your last two weeks smoother — even if it's as small as a calendar block or a keyboard shortcut.",
+    "channel_fallback": ""
+  },
+  {
+    "headline": "Hometown Breakfast",
+    "kind": "channel",
+    "body": "What does a typical breakfast look like where you grew up? A dish, a drink, a photo — let's take a little tour of the team's tables. 🍳🍜",
+    "channel_fallback": ""
+  },
+  {
+    "headline": "Collaboration Win",
+    "kind": "channel",
+    "body": "Name one moment in the last two weeks when teamwork made the outcome better than going solo. What made it work?",
+    "channel_fallback": ""
+  },
+  {
+    "headline": "Focus Trick",
+    "kind": "channel",
+    "body": "What's your best trick for a focused hour — headphones, timer, walking, inbox closed? Steal ideas from each other in the replies.",
+    "channel_fallback": ""
+  },
+  {
+    "headline": "Kindness Ledger",
+    "kind": "channel",
+    "body": "Share one small act of kindness you noticed recently — given, received, or observed. Let's collect good receipts.",
+    "channel_fallback": ""
+  },
+  {
+    "headline": "Untranslatable Word",
+    "kind": "channel",
+    "body": "Teach us one word or phrase from your language that's hard to translate — and what it really means. 🌏",
+    "channel_fallback": ""
+  },
+  {
+    "headline": "Reset Ritual",
+    "kind": "channel",
+    "body": "After a tough day, what helps you reset — walk, music, tea, boundary? Share a ritual that actually works for you.",
+    "channel_fallback": ""
+  },
+  {
+    "headline": "Proud Moment",
+    "kind": "channel",
+    "body": "What's one thing you're quietly proud of from the last two weeks? Progress counts even if nobody applauded yet.",
+    "channel_fallback": ""
+  },
+  {
+    "headline": "Advice to Past Self",
+    "kind": "channel",
+    "body": "If you could send one sentence of advice to yourself on your first day in this role, what would it say?",
+    "channel_fallback": ""
+  },
+  {
+    "headline": "Team Superpower",
+    "kind": "channel",
+    "body": "What do you think this team's unofficial superpower is — speed, care, humor, precision? Reply with one word and one example.",
+    "channel_fallback": ""
+  },
+  {
+    "headline": "Gratitude Round",
+    "kind": "channel",
+    "body": "Name one person and one non-person thing you're grateful for this week. Keep it work-appropriate and heartfelt.",
+    "channel_fallback": ""
+  },
+  {
+    "headline": "Perspective Shift",
+    "kind": "channel",
+    "body": "When did you last change your mind about something at work? What new evidence or conversation helped you see it differently?",
+    "channel_fallback": ""
+  }
+]

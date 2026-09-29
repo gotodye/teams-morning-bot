@@ -7,12 +7,12 @@ from datetime import date
 # Static B+ pools (humor, warm, fact, travel) live in static_messages.py
 
 MANAGEMENT_QUOTES: list[str] = [
-    # Verified quotes from renowned leaders, authors, and thinkers
+    # Verified quotes from renowned leaders, authors, and thinkers (~80:20 global:Asian)
     '💼 Management Moment: "Leadership is not about being in charge. It is about taking care of those in your charge." — Simon Sinek',
     '💼 Management Moment: "Management is doing things right; leadership is doing the right things." — Peter Drucker',
     '💼 Management Moment: "The best way to find out if you can trust somebody is to trust them." — Ernest Hemingway',
     '💼 Management Moment: "It is not the strongest of the species that survives, but the one most adaptable to change." — Charles Darwin',
-    '💼 Management Moment: "The function of leadership is to produce more leaders, not more followers." — Ralph Nader',
+    '💼 Management Moment: "I don\'t believe in taking right decisions. I take decisions and then make them right." — Ratan Tata',
     '💼 Management Moment: "Done is better than perfect." — Sheryl Sandberg',
     '💼 Management Moment: "Your most unhappy customers are your greatest source of learning." — Bill Gates',
     '💼 Management Moment: "The way to get started is to quit talking and begin doing." — Walt Disney',
@@ -20,27 +20,27 @@ MANAGEMENT_QUOTES: list[str] = [
     '💼 Management Moment: "The main thing is to keep the main thing the main thing." — Stephen Covey',
     '💼 Management Moment: "Feedback is the breakfast of champions." — Ken Blanchard',
     '💼 Management Moment: "A leader is one who knows the way, goes the way, and shows the way." — John C. Maxwell',
-    '💼 Management Moment: "What gets measured gets managed." — Peter Drucker',
+    '💼 Management Moment: "Love your job, but never fall in love with your company — because you never know when the company stops loving you." — N. R. Narayana Murthy',
     '💼 Management Moment: "Good is the enemy of great." — Jim Collins',
     '💼 Management Moment: "Culture eats strategy for breakfast." — Peter Drucker',
     '💼 Management Moment: "The secret of getting ahead is getting started." — Mark Twain',
     '💼 Management Moment: "If you want to lift yourself up, lift up someone else." — Booker T. Washington',
     '💼 Management Moment: "No man will make a great leader who wants to do it all himself." — Andrew Carnegie',
+    '💼 Management Moment: "The mission of a business is to contribute to the progress and welfare of society." — Konosuke Matsushita',
     '💼 Management Moment: "Price is what you pay. Value is what you get." — Warren Buffett',
-    '💼 Management Moment: "It takes 20 years to build a reputation and five minutes to ruin it." — Warren Buffett',
+    '💼 Management Moment: "In every decision, ask yourself what is the right thing to do as a human being." — Kazuo Inamori',
     '💼 Management Moment: "Success is not final, failure is not fatal: it is the courage to continue that counts." — Winston Churchill',
-    '💼 Management Moment: "The only way to do great work is to love what you do." — Steve Jobs',
-    '💼 Management Moment: "Great things in business are never done by one person. They\'re done by a team of people." — Steve Jobs',
+    '💼 Management Moment: "In the midst of chaos, there is also opportunity." — Sun Tzu',
     '💼 Management Moment: "Innovation distinguishes between a leader and a follower." — Steve Jobs',
-    '💼 Management Moment: "The greatest leader is not the one who does the greatest things, but the one who gets people to do the greatest things." — Ronald Reagan',
+    '💼 Management Moment: "The only way to do great work is to love what you do." — Steve Jobs',
     '💼 Management Moment: "A genuine leader is not a searcher for consensus but a molder of consensus." — Martin Luther King Jr.',
-    '💼 Management Moment: "The art of communication is the language of leadership." — James Humes',
+    '💼 Management Moment: "Leadership is hard to define, and good leadership even harder. But if you can get people to follow you to the ends of the earth, you are a great leader." — Indra Nooyi',
     '💼 Management Moment: "You don\'t build a business. You build people, and then people build the business." — Zig Ziglar',
     '💼 Management Moment: "People will forget what you said, but they will never forget how you made them feel." — Maya Angelou',
 ]
 
 PHILOSOPHY_QUOTES: list[str] = [
-    # Verified quotes from renowned philosophers
+    # Verified quotes from renowned philosophers, plus Southeast Asian proverbs
     '🪶 Philosophy Moment: "You have power over your mind — not outside events. Realize this, and you will find strength." — Marcus Aurelius',
     '🪶 Philosophy Moment: "We suffer more often in imagination than in reality." — Seneca',
     '🪶 Philosophy Moment: "We are what we repeatedly do. Excellence, then, is not an act, but a habit." — Aristotle',
@@ -53,14 +53,14 @@ PHILOSOPHY_QUOTES: list[str] = [
     '🪶 Philosophy Moment: "The mind is everything. What you think you become." — Buddha',
     '🪶 Philosophy Moment: "Knowing yourself is the beginning of all wisdom." — Aristotle',
     '🪶 Philosophy Moment: "Waste no more time arguing about what a good man should be. Be one." — Marcus Aurelius',
-    '🪶 Philosophy Moment: "The only thing I know is that I know nothing." — Socrates',
+    '🪶 Philosophy Moment: "Grind iron with enough patience, and one day it becomes a needle." — Vietnamese proverb',
     '🪶 Philosophy Moment: "Dwell on the beauty of life. Watch the stars, and see yourself running with them." — Marcus Aurelius',
     '🪶 Philosophy Moment: "Life is really simple, but we insist on making it complicated." — Confucius',
-    '🪶 Philosophy Moment: "Man is condemned to be free; because once thrown into the world, he is responsible for everything he does." — Jean-Paul Sartre',
+    '🪶 Philosophy Moment: "Little by little, over time it becomes a hill." — Indonesian proverb',
     '🪶 Philosophy Moment: "The greatest wealth is to live content with little." — Plato',
     '🪶 Philosophy Moment: "To be yourself in a world that is constantly trying to make you something else is the greatest accomplishment." — Ralph Waldo Emerson',
     '🪶 Philosophy Moment: "As is a tale, so is life: not how long it is, but how good it is, is what matters." — Seneca',
-    '🪶 Philosophy Moment: "Act only according to that maxim whereby you can at the same time will that it should become a universal law." — Immanuel Kant',
+    '🪶 Philosophy Moment: "Go slowly, and you will get a beautiful blade." — Thai proverb',
     '🪶 Philosophy Moment: "I think, therefore I am." — René Descartes',
     '🪶 Philosophy Moment: "The journey of a thousand miles begins with a single step." — Laozi',
     '🪶 Philosophy Moment: "No man ever steps in the same river twice, for it\'s not the same river and he\'s not the same man." — Heraclitus',
