@@ -37,9 +37,11 @@ REGION_FEEDS = {
     "TH": "https://news.google.com/rss?hl=en&gl=TH&ceid=TH:en",
 }
 
+# The old reutersagency.com RSS endpoints were retired and now 404, so use
+# Google News' topic feeds (same reliable host as the regional feeds above).
 GLOBAL_FEEDS = {
-    "Reuters World": "https://www.reutersagency.com/feed/?taxonomy=best-topics&post_type=best",
-    "Reuters Business": "https://www.reutersagency.com/feed/?best-topics=business-finance&post_type=best",
+    "Google News World": "https://news.google.com/rss/headlines/section/topic/WORLD?hl=en-US&gl=US&ceid=US:en",
+    "Google News Business": "https://news.google.com/rss/headlines/section/topic/BUSINESS?hl=en-US&gl=US&ceid=US:en",
 }
 
 MAJOR_KEYWORDS: dict[str, int] = {
@@ -289,10 +291,6 @@ def score_news_item(item: NewsItem, items: list[NewsItem]) -> tuple[int, list[st
     if confirmations:
         score += confirmations
         reasons.append("multi-source")
-
-    if item.source.startswith("Reuters"):
-        score += 8
-        reasons.append("reuters")
 
     return score, reasons
 
