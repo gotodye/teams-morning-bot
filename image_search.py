@@ -63,6 +63,14 @@ INTERACTION_KEYWORDS: list[str] = [
     "team meeting smile diverse",
 ]
 
+TECH_KEYWORDS: list[str] = [
+    "technology circuit board abstract blue",
+    "futuristic digital network connections",
+    "computer chip macro technology",
+    "innovation science technology bright",
+    "data visualization glowing technology",
+]
+
 MOOD_KEYWORDS: dict[str, str] = {
     "humor": "bright cheerful funny office coffee morning",
     "warm": "golden sunrise soft morning light peaceful scenic",
@@ -99,6 +107,10 @@ def build_search_query(
     if source == "interaction":
         digest = int(hashlib.md5(message.encode()).hexdigest(), 16)
         return INTERACTION_KEYWORDS[digest % len(INTERACTION_KEYWORDS)]
+
+    if source == "tech":
+        digest = int(hashlib.md5(message.encode()).hexdigest(), 16)
+        return TECH_KEYWORDS[digest % len(TECH_KEYWORDS)]
 
     if mood and mood in MOOD_KEYWORDS:
         return MOOD_KEYWORDS[mood]

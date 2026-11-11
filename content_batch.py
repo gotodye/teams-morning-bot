@@ -37,7 +37,7 @@ def _legacy_batch() -> dict[str, Any]:
     """Build batch dict from legacy Python modules (fallback)."""
     from articles import ARTICLES
     from interactions import INTERACTIONS
-    from messages import MANAGEMENT_QUOTES, PHILOSOPHY_QUOTES
+    from messages import MANAGEMENT_QUOTES, PHILOSOPHY_QUOTES, TECH_TIDBITS
     from static_messages import STATIC_BY_WEEKDAY, STATIC_GENERAL
 
     static: list[dict[str, Any]] = []
@@ -56,13 +56,14 @@ def _legacy_batch() -> dict[str, Any]:
         "static": static,
         "articles": list(ARTICLES),
         "interactions": list(INTERACTIONS),
+        "tech": list(TECH_TIDBITS),
         "_meta": {"period": "legacy", "source": "python_modules"},
     }
 
 
 def _write_batch_dir(batch_dir: Path, data: dict[str, Any], period: str) -> None:
     batch_dir.mkdir(parents=True, exist_ok=True)
-    for key in ("management", "philosophy", "static", "articles", "interactions"):
+    for key in ("management", "philosophy", "static", "articles", "interactions", "tech"):
         if key in data:
             (batch_dir / f"{key}.json").write_text(
                 json.dumps(data[key], ensure_ascii=False, indent=2) + "\n",
@@ -74,7 +75,7 @@ def _write_batch_dir(batch_dir: Path, data: dict[str, Any], period: str) -> None
         "source": "content_batch._write_batch_dir",
         "counts": {
             key: len(data[key])
-            for key in ("management", "philosophy", "static", "articles", "interactions")
+            for key in ("management", "philosophy", "static", "articles", "interactions", "tech")
             if key in data
         },
     }
@@ -134,7 +135,7 @@ def load_batch(today: date) -> dict[str, Any]:
         return data
 
     data: dict[str, Any] = {}
-    for name in ("management", "philosophy", "static", "articles", "interactions"):
+    for name in ("management", "philosophy", "static", "articles", "interactions", "tech"):
         path = batch_dir / f"{name}.json"
         if path.is_file():
             data[name] = _load_json(path)
@@ -195,6 +196,12 @@ def pick_management(today: date) -> str:
 def pick_philosophy(today: date) -> str:
     pool = load_batch(today)["philosophy"]
     return pool[_sequential_index(today, "philosophy", len(pool))]
+
+
+def pick_tech(today: date) -> str:
+    """Weekly tech tidbit — bilingual curated pool, half-year sequential."""
+    pool = load_batch(today)["tech"]
+    return pool[_sequential_index(today, "tech", len(pool))]
 
 
 def pick_static(today: date) -> StaticPick:
