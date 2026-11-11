@@ -568,7 +568,44 @@ def _static() -> list[dict]:
         },
     ]
     items.extend(extras)
-    return items
+    return _interleave_by_format(items)
+
+
+def _interleave_by_format(items: list[dict]) -> list[dict]:
+    """Spread the pool across formats so sequential picks rotate variety.
+
+    The sequential half-year index walks the pool in stored order, so a pool
+    grouped in format blocks (all humor, then all travel, ...) produces long
+    mono-format runs. This greedily places, at each step, the format with the
+    most remaining items that differs from the one just placed — spreading even
+    an over-represented format (e.g. travel) evenly instead of clustering it.
+    """
+    from collections import deque
+
+    order = ["humor", "warm", "fact", "travel"]
+    buckets: dict[str, deque] = {fmt: deque() for fmt in order}
+    tail: list[dict] = []
+    for item in items:
+        fmt = item.get("format", "")
+        if fmt in buckets:
+            buckets[fmt].append(item)
+        else:
+            tail.append(item)
+
+    woven: list[dict] = []
+    prev: str | None = None
+    total = sum(len(b) for b in buckets.values())
+    for _ in range(total):
+        # formats still available, most-remaining first; tie-break by fixed order
+        avail = sorted(
+            (fmt for fmt in order if buckets[fmt]),
+            key=lambda f: (-len(buckets[f]), order.index(f)),
+        )
+        pick = next((f for f in avail if f != prev), avail[0])
+        woven.append(buckets[pick].popleft())
+        prev = pick
+    woven.extend(tail)
+    return woven
 
 
 def main() -> int:
