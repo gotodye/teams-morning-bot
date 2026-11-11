@@ -23,6 +23,7 @@ from content_batch import (
     pick_management as batch_pick_management,
     pick_philosophy as batch_pick_philosophy,
     pick_static as batch_pick_static,
+    pick_tech as batch_pick_tech,
 )
 from messages import (
     build_card_subtitle,
@@ -48,7 +49,7 @@ logger = logging.getLogger(__name__)
 
 TZ_TAIWAN = ZoneInfo("Asia/Taipei")
 WEEKDAY_NAMES = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-DEFAULT_AI_WORKDAY_INTERVAL = 10
+DEFAULT_TECH_WORKDAY_INTERVAL = 10
 DEFAULT_MANAGEMENT_QUOTE_WEEKDAY = 2  # Wednesday — weekly management wisdom day
 PLACEHOLDER_WEBHOOK_URL = (
     "https://prod-00.eastus.logic.azure.com/workflows/validate-only-placeholder"
@@ -138,13 +139,13 @@ def get_article_day_in_week(today: date) -> date | None:
     return _pick_week_slot(today, "article", _management_days_in_week(today))
 
 
-def get_ai_day_in_week(today: date) -> date | None:
-    """Pick one workday per week for AI-generated messages."""
+def get_tech_day_in_week(today: date) -> date | None:
+    """Pick one workday per week for the tech tidbit (科技新知) slot."""
     excluded = _management_days_in_week(today)
     article_day = _pick_week_slot(today, "article", excluded)
     if article_day:
         excluded.add(article_day)
-    return _pick_week_slot(today, "ai", excluded)
+    return _pick_week_slot(today, "tech", excluded)
 
 
 def _pick_week_slot(today: date, slot: str, excluded: set[date]) -> date | None:
@@ -190,9 +191,9 @@ def get_biweek_special_day(today: date, slot: str) -> date | None:
     return _pick_biweek_slot(today, slot, set())
 
 
-def get_ai_day_in_biweek(today: date) -> date | None:
-    """Pick one workday per biweek for AI-generated messages."""
-    return _pick_biweek_slot(today, "ai", set())
+def get_tech_day_in_biweek(today: date) -> date | None:
+    """Pick one workday per biweek for the tech tidbit (科技新知) slot."""
+    return _pick_biweek_slot(today, "tech", set())
 
 
 def get_philosophy_day_in_biweek(today: date) -> date | None:
@@ -216,13 +217,13 @@ def get_interaction_day_in_biweek(today: date) -> date | None:
     return _pick_biweek_slot(today, "interaction", excluded)
 
 
-def should_use_ai(today: date) -> bool:
+def should_use_tech(today: date) -> bool:
     """
-    判斷今天是否使用方案 B（AI 生成）。
+    判斷今天是否發送「科技新知」(curated 中英雙語,取代原 AI 問候)。
     預設每週一個工作日；亦可透過環境變數調整或強制指定。
     """
     forced = os.environ.get("FORCE_MESSAGE_TYPE", "").lower()
-    if forced == "ai":
+    if forced in ("tech", "ai"):  # "ai" kept as a backward-compatible alias
         return True
     if forced in ("static", "management", "philosophy", "article", "interaction"):
         return False
@@ -230,21 +231,21 @@ def should_use_ai(today: date) -> bool:
     mode = os.environ.get("MESSAGE_MODE", "mixed").lower()
     if mode == "static":
         return False
-    if mode == "ai":
+    if mode in ("tech", "ai"):
         return True
 
-    strategy = os.environ.get("AI_SCHEDULE_STRATEGY", "weekly").lower()
+    strategy = os.environ.get("TECH_SCHEDULE_STRATEGY", "weekly").lower()
     if strategy == "workday_interval":
-        interval = int(os.environ.get("AI_WORKDAY_INTERVAL", DEFAULT_AI_WORKDAY_INTERVAL))
+        interval = int(os.environ.get("TECH_WORKDAY_INTERVAL", DEFAULT_TECH_WORKDAY_INTERVAL))
         workday_number = count_workdays_since(date(2024, 1, 1), today)
         return workday_number % interval == 0
 
     if strategy == "biweekly":
-        ai_day = get_ai_day_in_biweek(today)
-        return ai_day == today
+        tech_day = get_tech_day_in_biweek(today)
+        return tech_day == today
 
-    ai_day = get_ai_day_in_week(today)
-    return ai_day == today
+    tech_day = get_tech_day_in_week(today)
+    return tech_day == today
 
 
 def is_article_insight_day(today: date) -> bool:
@@ -252,7 +253,7 @@ def is_article_insight_day(today: date) -> bool:
     forced = os.environ.get("FORCE_MESSAGE_TYPE", "").lower()
     if forced == "article":
         return True
-    if forced in ("ai", "static", "management", "philosophy", "interaction"):
+    if forced in ("tech", "ai", "static", "management", "philosophy", "interaction"):
         return False
 
     article_day = get_article_day_in_week(today)
@@ -264,7 +265,7 @@ def is_interaction_day(today: date) -> bool:
     forced = os.environ.get("FORCE_MESSAGE_TYPE", "").lower()
     if forced == "interaction":
         return True
-    if forced in ("ai", "static", "management", "philosophy", "article"):
+    if forced in ("tech", "ai", "static", "management", "philosophy", "article"):
         return False
 
     interaction_day = get_interaction_day_in_biweek(today)
@@ -276,7 +277,7 @@ def is_management_quote_day(today: date) -> bool:
     forced = os.environ.get("FORCE_MESSAGE_TYPE", "").lower()
     if forced == "management":
         return True
-    if forced in ("ai", "static", "philosophy", "article", "interaction"):
+    if forced in ("tech", "ai", "static", "philosophy", "article", "interaction"):
         return False
 
     mgmt_weekday = int(
@@ -290,7 +291,7 @@ def is_philosophy_quote_day(today: date) -> bool:
     forced = os.environ.get("FORCE_MESSAGE_TYPE", "").lower()
     if forced == "philosophy":
         return True
-    if forced in ("ai", "static", "management", "article", "interaction"):
+    if forced in ("tech", "ai", "static", "management", "article", "interaction"):
         return False
 
     philosophy_day = get_philosophy_day_in_biweek(today)
@@ -313,8 +314,8 @@ def resolve_message_source(today: date) -> str | None:
         return "philosophy"
     if is_interaction_day(today):
         return "interaction"
-    if should_use_ai(today):
-        return "ai"
+    if should_use_tech(today):
+        return "tech"
     return "static"
 
 
@@ -350,7 +351,7 @@ def _image_meta_from_pick(pick: StaticPick) -> dict[str, str]:
 def build_message(today: date) -> tuple[str, str, dict[str, str]]:
     """
     Build today's message. Returns (message, source, image_meta).
-    Sources: management | article | philosophy | interaction | ai | static
+    Sources: management | article | philosophy | interaction | tech | static
     """
     if is_management_quote_day(today):
         logger.info("Management quote day — famous leader quote")
@@ -372,44 +373,17 @@ def build_message(today: date) -> tuple[str, str, dict[str, str]]:
         logger.info("Interaction day — biweekly channel prompt")
         return build_interaction_message(today), "interaction", {}
 
-    if should_use_ai(today):
-        logger.info("AI-generated creative message")
-        try:
-            return generate_ai_message(today), "ai", {}
-        except Exception:
-            logger.warning("AI failed — falling back to static message", exc_info=True)
-            return _static_fallback(today)
+    if should_use_tech(today):
+        logger.info("Tech tidbit day — curated 科技新知")
+        return pick_tech_tidbit(today), "tech", {}
 
     logger.info("Static creative message (B+) [%s]", half_year_key(today))
     return _static_fallback(today)
 
 
-def generate_ai_message(today: date) -> str:
-    """Scheme B: call LLM API to generate a creative English morning greeting."""
-    provider = os.environ.get("AI_PROVIDER", "openai").lower()
-    weekday_name = WEEKDAY_NAMES[today.weekday()]
-
-    weekday_themes = {
-        0: "Monday blues — energize the team with wit and encouragement",
-        1: "Tuesday momentum — steady progress and team spirit",
-        2: "Wednesday midweek — humor and a fresh perspective",
-        3: "Thursday push — weekend is near, finish strong",
-        4: "Friday celebration — acknowledge the week's effort",
-    }
-    theme = weekday_themes.get(today.weekday(), "general weekday greeting")
-
-    prompt = (
-        f"Today is {today.strftime('%B %d, %Y')}, {weekday_name}. "
-        f"Theme: {theme}. "
-        "Write a creative, witty morning greeting for colleagues in English. "
-        "Be warm, original, and slightly playful — avoid clichés. "
-        "You may include one emoji. Keep it under 50 words. "
-        "Output the greeting only, no title."
-    )
-
-    if provider == "gemini":
-        return _call_gemini(prompt)
-    return _call_openai(prompt)
+def pick_tech_tidbit(today: date) -> str:
+    """Weekly tech knowledge (科技新知) — curated bilingual pool, no LLM call."""
+    return batch_pick_tech(today)
 
 
 def _call_openai(prompt: str) -> str:
@@ -695,7 +669,7 @@ def _build_teams_payload(
 
     theme_colors = {
         "static": "0078D4",
-        "ai": "6264A7",
+        "tech": "008575",
         "management": "C19A6B",
         "philosophy": "2D6A4F",
         "article": "E85D04",
@@ -745,18 +719,6 @@ def send_to_teams(
     logger.info("Message sent to Teams!")
 
 
-def _would_use_ai_today(today: date) -> bool:
-    """Whether build_message would attempt AI generation for this date."""
-    forced = os.environ.get("FORCE_MESSAGE_TYPE", "").lower()
-    if forced == "ai":
-        return True
-    if forced in ("static", "management", "philosophy", "article", "interaction"):
-        return False
-    if is_management_quote_day(today) or is_philosophy_quote_day(today) or is_article_insight_day(today) or is_interaction_day(today):
-        return False
-    return should_use_ai(today)
-
-
 def _audit_configuration(today: date) -> tuple[list[str], list[str]]:
     """Return (errors, warnings) for environment and schedule checks."""
     errors: list[str] = []
@@ -771,11 +733,8 @@ def _audit_configuration(today: date) -> tuple[list[str], list[str]]:
     elif not webhook.startswith("https://"):
         errors.append("TEAMS_WEBHOOK_URL must start with https://")
 
-    provider = os.environ.get("AI_PROVIDER", "openai").lower()
-    if _would_use_ai_today(today):
-        key_name = "GEMINI_API_KEY" if provider == "gemini" else "OPENAI_API_KEY"
-        if not os.environ.get(key_name, "").strip():
-            errors.append(f"AI is scheduled today but {key_name} is not set")
+    # The weekly tech-tidbit slot is curated (no LLM), so no API key is required
+    # for it. Article summaries still use the LLM optionally, with a safe fallback.
 
     skip_check = os.environ.get("SKIP_WORKDAY_CHECK", "").lower() == "true"
     if not skip_check and not is_workday(today):
@@ -813,8 +772,6 @@ def run_validate_only(today: date) -> int:
     for error in errors:
         logger.error("Config: %s", error)
 
-    ai_scheduled = _would_use_ai_today(today)
-
     try:
         message, source, image_meta = build_message(today)
     except Exception:
@@ -822,9 +779,6 @@ def run_validate_only(today: date) -> int:
         return 1
 
     static_format = image_meta.get("static_format") or None
-
-    if ai_scheduled and source != "ai":
-        warnings.append("AI was scheduled but fell back to a static message — check API keys or logs above")
 
     news_appendix = ""
     if os.environ.get("ENABLE_MAJOR_NEWS", "true").lower() != "false":

@@ -442,6 +442,34 @@ INTERACTIONS = [
 ]
 
 
+TECH = [
+    "💡 Tech Tidbit · 科技新知\nThe word \"robot\" comes from the Czech \"robota\" (forced labor), coined in a 1920 play — decades before real robots existed.\n機器人「robot」源自捷克語 robota(強迫勞動),1920 年的舞台劇就先造了這個字,比真正的機器人早了數十年。",
+    "💡 Tech Tidbit · 科技新知\nThe first computer \"bug\" was a real moth, found stuck in a Harvard relay in 1947 and taped into the logbook.\n史上第一個電腦「bug」是真的蟲:1947 年一隻飛蛾卡在哈佛的繼電器裡,被貼進了紀錄本。",
+    "💡 Tech Tidbit · 科技新知\n\"Wi-Fi\" doesn't actually stand for anything — it's just a catchy brand name, not \"Wireless Fidelity.\"\nWi-Fi 其實不是任何縮寫,只是個好記的品牌名,並非「Wireless Fidelity」。",
+    "💡 Tech Tidbit · 科技新知\nThere are more possible games of chess than atoms in the observable universe — which is why AI can't just brute-force it.\n西洋棋可能的棋局比可觀測宇宙的原子還多,所以 AI 無法靠窮舉取勝。",
+    "💡 Tech Tidbit · 科技新知\nAn average smartphone today has far more computing power than all of NASA had when it sent humans to the Moon in 1969.\n今天一支普通手機的運算力,遠超過 1969 年 NASA 送人類登月時的全部電腦。",
+    "💡 Tech Tidbit · 科技新知\n\"Bluetooth\" is named after a 10th-century Danish king who united tribes — the logo merges his initials in runes.\n藍牙(Bluetooth)以 10 世紀統一部族的丹麥國王命名,logo 是他姓名縮寫的古北歐符文合體。",
+    "💡 Tech Tidbit · 科技新知\nQWERTY keyboards were designed in the 1870s partly to slow typists down, so mechanical typewriter arms wouldn't jam.\nQWERTY 鍵盤是 1870 年代設計的,部分目的竟是「放慢」打字速度,以免打字機的連桿卡住。",
+    "💡 Tech Tidbit · 科技新知\nThe entire early internet — ARPANET in 1969 — connected just four computers.\n整個早期網際網路(1969 年的 ARPANET)當時只連接了 4 台電腦。",
+    "💡 Tech Tidbit · 科技新知\n\"Spam\" email is named after a Monty Python sketch where the word is repeated endlessly — just like junk mail.\n垃圾郵件叫「spam」,典故來自 Monty Python 把這個字講個不停的短劇,就像灌不完的廣告信。",
+    "💡 Tech Tidbit · 科技新知\nThe @ symbol was nearly forgotten until 1971, when an engineer picked it to separate user from host in the first email.\n@ 符號曾幾乎被遺忘,直到 1971 年一位工程師選它來分隔使用者與主機,寫出第一封 email。",
+    "💡 Tech Tidbit · 科技新知\nMost of the world's internet traffic travels through undersea cables laid across the ocean floor — not satellites.\n全球大部分網路流量其實走海底電纜,而非衛星,一條條鋪在大洋底部。",
+    "💡 Tech Tidbit · 科技新知\nThe first 1 GB hard drive (IBM, 1980) weighed about 250 kg and cost $40,000. A tiny chip now holds thousands of times more.\n第一顆 1GB 硬碟(IBM,1980)重約 250 公斤、要價 4 萬美元;如今一枚小晶片的容量是它的數千倍。",
+    "💡 Tech Tidbit · 科技新知\n\"Debugging\" predates computers — Thomas Edison used \"bugs\" to describe technical faults back in the 1870s.\n「除錯(debug)」比電腦還早:1870 年代愛迪生就用「bug」來形容技術故障。",
+    "💡 Tech Tidbit · 科技新知\nA 12-character random password can take centuries to crack by brute force — adding length beats adding symbols.\n一組 12 個隨機字元的密碼,暴力破解可能要數百年;增加「長度」比加符號更有效。",
+    "💡 Tech Tidbit · 科技新知\nThe cloud is just someone else's computer — your data physically lives in a warehouse full of servers somewhere.\n所謂「雲端」其實是別人的電腦:你的資料實際存在某處一整棟塞滿伺服器的機房裡。",
+    "💡 Tech Tidbit · 科技新知\nGPS satellites must correct for Einstein's relativity — their clocks tick faster in orbit, or maps would drift kilometres a day.\nGPS 衛星必須校正愛因斯坦的相對論效應:軌道上的時鐘走得較快,否則定位每天會漂移數公里。",
+    "💡 Tech Tidbit · 科技新知\nThe first webcam (Cambridge, 1991) was invented just to watch a coffee pot, so people wouldn't walk to an empty one.\n第一台網路攝影機(劍橋,1991)發明的唯一目的,是盯著咖啡壺,免得大家白跑一趟。",
+    "💡 Tech Tidbit · 科技新知\nEmoji means \"picture character\" in Japanese (絵文字) — its resemblance to \"emotion\" is a happy coincidence.\nEmoji 在日文是「絵文字」(圖畫文字),和英文 emotion 的相似純屬巧合。",
+    "💡 Tech Tidbit · 科技新知\nMoore's Law — chips roughly doubling in power every two years — held for about 50 years and reshaped the modern world.\n摩爾定律(晶片效能約每兩年翻倍)維持了近 50 年,徹底重塑了現代世界。",
+    "💡 Tech Tidbit · 科技新知\nHumanity now generates more data every couple of days than it created in total up to the year 2003.\n如今人類每隔幾天產生的資料量,就超過 2003 年以前歷史上累積的總和。",
+    "💡 Tech Tidbit · 科技新知\nA modern electric car runs on more lines of software code than a fighter jet or the Space Shuttle did.\n一輛現代電動車搭載的程式碼行數,比一架戰鬥機、甚至當年的太空梭還多。",
+    "💡 Tech Tidbit · 科技新知\nTraining a large AI model can involve trillions of words — more text than a person could read in many lifetimes.\n訓練一個大型 AI 模型可能用到數兆個字,比一個人好幾輩子能讀的還多。",
+    "💡 Tech Tidbit · 科技新知\nThe first message sent over the internet in 1969 was meant to be \"LOGIN\" — the system crashed after just \"LO.\"\n1969 年第一則網路訊息本想傳「LOGIN」,系統送到「LO」就當機了。",
+    "💡 Tech Tidbit · 科技新知\nA single modern GPU can do more calculations per second than the fastest supercomputer on Earth did in the year 2000.\n一張現代 GPU 每秒的運算量,已超過 2000 年全世界最快的超級電腦。",
+]
+
+
 def _static() -> list[dict]:
     items: list[dict] = [
         # --- Humor (de-engineered, workplace + life) ---
@@ -614,6 +642,7 @@ def main() -> int:
         "philosophy": PHILOSOPHY,
         "articles": ARTICLES,
         "interactions": INTERACTIONS,
+        "tech": TECH,
         "static": _static(),
     }
     out = ROOT / "scripts" / "seeds" / "h2_2026.py"
